@@ -40,6 +40,10 @@ public class RegisterControl extends HttpServlet {
                         User user = (User)session.getAttribute("register");
                         dao.doSignup(user.getUsername(), user.getPassword(), user.getName(), user.getEmail(), user.getAddress(), user.getPhone(),user.getRole());
         //                dao.sendEmail(gmail, user);
+                        user = dao.doLogin(user.getUsername(), user.getPassword());
+                        if("2".equals(user.getRole())){
+                            dao.createShoppingCart(user.getUserId());
+                        }
                         session.setAttribute("Message", "Sign-up Successful!");
                         request.getRequestDispatcher("index.jsp").forward(request, response);
         //            }             
@@ -54,21 +58,59 @@ public class RegisterControl extends HttpServlet {
                 String email = request.getParameter("email");
                 String phone = request.getParameter("phone");
                 String address = request.getParameter("address");
-                register = new User(username, password, first_name+" "+last_name, email, address, phone, "2");
+                String province = request.getParameter("province");
+                String role = request.getParameter("role");
+                register = new User(username, password, first_name+" "+last_name, email, address+", "+province, phone, role);
                 String code = validation.randomCode(10);
                 if(!dao.checkUsername(username)){
+                    session.setAttribute("username", null);
+                    session.setAttribute("password", password);
+                    session.setAttribute("re_password", re_password);
+                    session.setAttribute("first_name", first_name);
+                    session.setAttribute("last_name", last_name);
+                    session.setAttribute("email", email);
+                    session.setAttribute("phone", phone);
+                    session.setAttribute("address", address);
+                    session.setAttribute("role", role);
                     request.setAttribute("message", "This username is existed!");
                     request.getRequestDispatcher("Register.jsp").forward(request, response);
                 }
                 else if(!dao.checkEmail(email)){
+                    session.setAttribute("username", username);
+                    session.setAttribute("password", password);
+                    session.setAttribute("re_password", re_password);
+                    session.setAttribute("first_name", first_name);
+                    session.setAttribute("last_name", last_name);
+                    session.setAttribute("email", null);
+                    session.setAttribute("phone", phone);
+                    session.setAttribute("address", address);
+                    session.setAttribute("role", role);
                     request.setAttribute("message", "This email is existed!");
                     request.getRequestDispatcher("Register.jsp").forward(request, response);
                 }
                 else if(!dao.checkPhoneNumber(phone)){
+                    session.setAttribute("username", username);
+                    session.setAttribute("password", password);
+                    session.setAttribute("re_password", re_password);
+                    session.setAttribute("first_name", first_name);
+                    session.setAttribute("last_name", last_name);
+                    session.setAttribute("email", email);
+                    session.setAttribute("phone", null);
+                    session.setAttribute("address", address);
+                    session.setAttribute("role", role);
                     request.setAttribute("message", "This phone is existed!");
                     request.getRequestDispatcher("Register.jsp").forward(request, response);
                 }
                 else if(!password.equals(re_password)) {
+                    session.setAttribute("username", username);
+                    session.setAttribute("password", password);
+                    session.setAttribute("re_password", null);
+                    session.setAttribute("first_name", first_name);
+                    session.setAttribute("last_name", last_name);
+                    session.setAttribute("email", email);
+                    session.setAttribute("phone", phone);
+                    session.setAttribute("address", address);
+                    session.setAttribute("role", role);
                     request.setAttribute("message", "Password was not match!");
                     request.getRequestDispatcher("Register.jsp").forward(request, response);
                 }else{

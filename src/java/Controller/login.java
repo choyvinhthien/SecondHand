@@ -72,7 +72,6 @@ public class login extends HttpServlet {
         }else{
             HttpSession session=request.getSession();
             session.setAttribute("user", u);
-            session.setAttribute("isEmail", false);
             response.sendRedirect("index.jsp");
         }
     }

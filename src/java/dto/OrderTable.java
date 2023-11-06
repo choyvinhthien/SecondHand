@@ -4,7 +4,9 @@
  */
 package dto;
 
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -18,18 +20,21 @@ public class OrderTable {
     private String shipPhone;
     private String shipAddress;
     private Date orderDate;
-    private int shipFee;
+    private BigDecimal shipFee;
     private Discount discount;
-    private float totalAmount;
+    private BigDecimal totalAmount;
     private String paymentMethod;
     private String status;
-    private User user;
+    private User customer;
+    private User seller;
+    private User shipper;
+    private List<OrderItem> orderItems;
     
     public OrderTable() {
     }
-    
-    public OrderTable(String shipName, String shipMail, String shipPhone, String shipAddress, Date orderDate,
-                 int shipFee, Discount discount, float totalAmount, String paymentMethod, String status, User user) {
+
+    public OrderTable(int orderId, String shipName, String shipMail, String shipPhone, String shipAddress, Date orderDate, BigDecimal shipFee, Discount discount, BigDecimal totalAmount, String paymentMethod, String status, User customer, User seller, User shipper, List<OrderItem> orderItems) {
+        this.orderId = orderId;
         this.shipName = shipName;
         this.shipMail = shipMail;
         this.shipPhone = shipPhone;
@@ -40,8 +45,118 @@ public class OrderTable {
         this.totalAmount = totalAmount;
         this.paymentMethod = paymentMethod;
         this.status = status;
-        this.user = user;
+        this.customer = customer;
+        this.seller = seller;
+        this.shipper = shipper;
+        this.orderItems = orderItems;
     }
+
+    public OrderTable(String shipName, String shipMail, String shipPhone, String shipAddress, Date orderDate, BigDecimal shipFee, Discount discount, BigDecimal totalAmount, String paymentMethod, String status, User customer, User seller, User shipper, List<OrderItem> orderItems) {
+        this.shipName = shipName;
+        this.shipMail = shipMail;
+        this.shipPhone = shipPhone;
+        this.shipAddress = shipAddress;
+        this.orderDate = orderDate;
+        this.shipFee = shipFee;
+        this.discount = discount;
+        this.totalAmount = totalAmount;
+        this.paymentMethod = paymentMethod;
+        this.status = status;
+        this.customer = customer;
+        this.seller = seller;
+        this.shipper = shipper;
+        this.orderItems = orderItems;
+    }
+
+    public OrderTable(String shipName, String shipMail, String shipPhone, String shipAddress, Date orderDate, BigDecimal shipFee, Discount discount, BigDecimal totalAmount, String paymentMethod, String status, User customer, User seller, User shipper) {
+        this.shipName = shipName;
+        this.shipMail = shipMail;
+        this.shipPhone = shipPhone;
+        this.shipAddress = shipAddress;
+        this.orderDate = orderDate;
+        this.shipFee = shipFee;
+        this.discount = discount;
+        this.totalAmount = totalAmount;
+        this.paymentMethod = paymentMethod;
+        this.status = status;
+        this.customer = customer;
+        this.seller = seller;
+        this.shipper = shipper;
+    }
+
+    public OrderTable(String shipName, String shipMail, String shipPhone, String shipAddress, Date orderDate, BigDecimal shipFee, Discount discount, String paymentMethod, String status, User customer) {
+        this.shipName = shipName;
+        this.shipMail = shipMail;
+        this.shipPhone = shipPhone;
+        this.shipAddress = shipAddress;
+        this.orderDate = orderDate;
+        this.shipFee = shipFee;
+        this.discount = discount;
+        this.paymentMethod = paymentMethod;
+        this.status = status;
+        this.customer = customer;
+    }
+    public OrderTable(int orderId, String shipName, String shipMail, String shipPhone, String shipAddress, Date orderDate, BigDecimal shipFee, Discount discount, String paymentMethod, String status, User customer) {
+        this.orderId = orderId;
+        this.shipName = shipName;
+        this.shipMail = shipMail;
+        this.shipPhone = shipPhone;
+        this.shipAddress = shipAddress;
+        this.orderDate = orderDate;
+        this.shipFee = shipFee;
+        this.discount = discount;
+        this.paymentMethod = paymentMethod;
+        this.status = status;
+        this.customer = customer;
+    }
+
+    public OrderTable(int orderId, String shipName, String shipMail, String shipPhone, String shipAddress, Date orderDate, BigDecimal shipFee, Discount discount, BigDecimal totalAmount, String paymentMethod, String status, User customer, User seller, List<OrderItem> orderItems) {
+        this.orderId = orderId;
+        this.shipName = shipName;
+        this.shipMail = shipMail;
+        this.shipPhone = shipPhone;
+        this.shipAddress = shipAddress;
+        this.orderDate = orderDate;
+        this.shipFee = shipFee;
+        this.discount = discount;
+        this.totalAmount = totalAmount;
+        this.paymentMethod = paymentMethod;
+        this.status = status;
+        this.customer = customer;
+        this.seller = seller;
+        this.orderItems = orderItems;
+    }
+
+    
+
+    public OrderTable(int orderId, String shipName, String shipMail, String shipPhone, String shipAddress, Date orderDate, BigDecimal shipFee,Discount discount, BigDecimal totalAmount, String paymentMethod, String status, User customer, User seller) {
+        this.orderId = orderId;
+        this.shipName = shipName;
+        this.shipMail = shipMail;
+        this.shipPhone = shipPhone;
+        this.shipAddress = shipAddress;
+        this.orderDate = orderDate;
+        this.shipFee = shipFee;
+        this.discount = discount;
+        this.totalAmount = totalAmount;
+        this.paymentMethod = paymentMethod;
+        this.status = status;
+        this.customer = customer;
+        this.seller = seller;
+    }
+
+    
+
+    
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
+    }
+    
+    
 
     public int getOrderId() {
         return orderId;
@@ -91,11 +206,11 @@ public class OrderTable {
         this.orderDate = orderDate;
     }
 
-    public int getShipFee() {
+    public BigDecimal getShipFee() {
         return shipFee;
     }
 
-    public void setShipFee(int shipFee) {
+    public void setShipFee(BigDecimal shipFee) {
         this.shipFee = shipFee;
     }
 
@@ -107,11 +222,11 @@ public class OrderTable {
         this.discount = discount;
     }
 
-    public float getTotalAmount() {
+    public BigDecimal getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(float totalAmount) {
+    public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
     }
 
@@ -131,14 +246,30 @@ public class OrderTable {
         this.status = status;
     }
 
-    public User getUser() {
-        return user;
+    public User getCustomer() {
+        return customer;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setCustomer(User customer) {
+        this.customer = customer;
     }
-    
+
+    public User getSeller() {
+        return seller;
+    }
+
+    public void setSeller(User seller) {
+        this.seller = seller;
+    }
+
+    public User getShipper() {
+        return shipper;
+    }
+
+    public void setShipper(User shipper) {
+        this.shipper = shipper;
+    }
+
     
 
     @Override

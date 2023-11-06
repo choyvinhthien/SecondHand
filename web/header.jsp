@@ -1,17 +1,4 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<style>
-  /* Add this CSS to make the element initially collapsed */
-  .collapse {
-    display: none;
-  }
-</style>
-
-<script>
-  window.addEventListener('DOMContentLoaded', function() {
-    var navbarVertical = document.getElementById('navbar-vertical');
-    navbarVertical.classList.add('collapsed');
-  });
-</script>
 <!-- Topbar Start -->
         <div class="container-fluid">
             <div class="row bg-secondary py-2 px-xl-5">
@@ -97,14 +84,15 @@
                                 </div>
                             </div>
                             -->
-
+                            <c:if test="${sessionScope.user.getRole() == '2' || sessionScope.user == null}">
                             <ul class="navbar-nav w-100 overflow-hidden" style="height: 410px">
                                 <c:forEach items="${sessionScope.listCC}" var="o">
                                     <li class="nav-item">
-                                        <a href="category?cid=${o.categoryId}" class="nav-link">${o.name}</a>
+                                        <a href="CategoryController?cid=${o.categoryId}" class="nav-link">${o.name}</a>
                                     </li>
                                 </c:forEach>
-                            </ul>      
+                            </ul>
+                            </c:if>
                         </div>
                     </nav>
                 </div>
@@ -118,18 +106,16 @@
                         </button>
                         <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                             <div class="navbar-nav mr-auto py-0">
+                                <c:if test="${sessionScope.user.getRole() == '2' || sessionScope.user == null}">
                                 <a href="index.jsp" class="nav-item nav-link active">Home</a>
                                 <a href="shopController" class="nav-item nav-link">Shop</a>
+                                </c:if>
                                 <c:if test="${sessionScope.user != null}">
-                                <div class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
-                                    <div class="dropdown-menu rounded-0 m-0">
-                                        <a href="cart.jsp" class="dropdown-item">Shopping Cart</a>
-                                        <a href="checkout.jsp" class="dropdown-item">Checkout</a>
-                                    </div>
-                                </div>
-                                    <a href="./productManagerController" class="nav-item nav-link">Product Manager</a>
                                     <c:if test="${sessionScope.user.getRole() == '2'}">
+                                        <a href="cart.jsp" class="nav-item nav-link">Shopping Cart</a>
+                                    <a href="./productManagerController" class="nav-item nav-link">Product Manager</a>
+                                    </c:if>
+                                    <c:if test="${sessionScope.user.getRole() == '2' || sessionScope.user.getRole() == '3'}">
                                         <a href="./OrderManagerController" class="nav-item nav-link">Order Manager</a>
                                     </c:if>
                                     <a href="./MessengerManagerController" class="nav-item nav-link">Messenger</a>
@@ -144,7 +130,7 @@
                             </c:if>
                             
                             <c:if test="${sessionScope.user.getRole() == '2'}">
-                                    <a href="addProduct.jsp" class="nav-item nav-link">Post For Sale</a>
+                                    <a href="productManagerController" class="nav-item nav-link">Post For Sale</a>
                             </c:if>
                                     
                             <c:if test="${sessionScope.user.getRole() == '1'}">
@@ -154,17 +140,22 @@
                                         <a href="AccountManagerController" class="dropdown-item">Accounts</a>
                                         <a href="CategoryManagerController" class="dropdown-item">Categories</a>
                                         <a href="productManagerController" class="dropdown-item">Products</a>
+                                        <a href="DiscountManagerController" class="dropdown-item">Discounts</a>
                                         </div>
                                     </div>
                                 </c:if>
 
                             <c:if test="${sessionScope.user != null}">
                         <div class="nav-item dropdown">
-                            <c:if test="${sessionScope.user.getRole() == '2'}">
+                            <c:if test="${sessionScope.user.getRole() == '2'|| sessionScope.user.getRole() == '3'}">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">${sessionScope.user.getName()}</a>
                                 <div class="dropdown-menu rounded-0 m-0">
-                                <c:if test="${sessionScope.isEmail==false}">
                                     <a href="profileController" class="dropdown-item">Profile</a>
+                                    <c:if test="${sessionScope.user.getRole() == '2'}">
+                                        <a href="OrderForSellerController" class="dropdown-item">Shop's Orders</a>
+                                    </c:if>
+                                    <c:if test="${sessionScope.user.getRole() == '3'}">
+                                        <a href="OrderForShipperController" class="dropdown-item">Shipper's Orders</a>
                                     </c:if>
                             </c:if>
                             <c:if test="${sessionScope.user.getRole() == '1'}">
@@ -178,7 +169,64 @@
                             </c:if> 
                         </div>
                     </nav>
+                    <div id="header-carousel" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active" style="height: 410px;">
+                                <img class="img-fluid" src="img/carousel-1.jpg" alt="Image">
+                                <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                                    <div class="p-3" style="max-width: 700px;">
+                                        <h4 class="text-light text-uppercase font-weight-medium mb-3">10% Off Your First Order</h4>
+                                        <h3 class="display-4 text-white font-weight-semi-bold mb-4">Fashionable Dress</h3>
+                                        <a href="shopController" class="btn btn-light py-2 px-3">Shop Now</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-item" style="height: 410px;">
+                                <img class="img-fluid" src="img/carousel-2.jpg" alt="Image">
+                                <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                                    <div class="p-3" style="max-width: 700px;">
+                                        <h4 class="text-light text-uppercase font-weight-medium mb-3">10% Off Your First Order</h4>
+                                        <h3 class="display-4 text-white font-weight-semi-bold mb-4">Reasonable Price</h3>
+                                        <a href="shopController" class="btn btn-light py-2 px-3">Shop Now</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="carousel-item" style="height: 410px;">
+                                <img class="img-fluid" src="img/carousel-3.jpg" alt="Image">
+                                <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                                    <div class="p-3" style="max-width: 700px;">
+                                        <h4 class="text-light text-uppercase font-weight-medium mb-3">Flexible With Luxury Colors</h4>
+                                        <h3 class="display-4 text-white font-weight-semi-bold mb-4">Quality Put Up</h3>
+                                        <a href="shopController" class="btn btn-light py-2 px-3">Shop Now</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="carousel-item" style="height: 410px;">
+                                <img class="img-fluid" src="img/carousel-4.jpg" alt="Image">
+                                <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                                    <div class="p-3" style="max-width: 700px;">
+                                        <h4 class="text-light text-uppercase font-weight-medium mb-3">75% Off All Products</h4>
+                                        <h3 class="display-4 text-white font-weight-semi-bold mb-4">Highly Appreciate Your Feeling</h3>
+                                        <a href="shopController" class="btn btn-light py-2 px-3">Shop Now</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
+                            <div class="btn btn-dark" style="width: 45px; height: 45px;">
+                                <span class="carousel-control-prev-icon mb-n2"></span>
+                            </div>
+                        </a>
+                        <a class="carousel-control-next" href="#header-carousel" data-slide="next">
+                            <div class="btn btn-dark" style="width: 45px; height: 45px;">
+                                <span class="carousel-control-next-icon mb-n2"></span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
-<!-- Navbar End -->
+        <!-- Navbar End -->

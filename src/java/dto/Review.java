@@ -4,19 +4,32 @@
  */
 package dto;
 
+import java.util.Date;
+
 public class Review {
     private int reviewId;
-    private int rating;
+    private float rating;
     private String comment;
+    private Date date;
     private User user;
     private Product product;
     
     public Review() {
     }
     
-    public Review(int rating, String comment, User user, Product product) {
+    public Review(float rating, String comment, Date date, User user, Product product) {
         this.rating = rating;
         this.comment = comment;
+        this.date=date;
+        this.user = user;
+        this.product = product;
+    }
+
+    public Review(int reviewId, float rating, String comment, Date date, User user, Product product) {
+        this.reviewId = reviewId;
+        this.rating = rating;
+        this.comment = comment;
+        this.date = date;
         this.user = user;
         this.product = product;
     }
@@ -29,11 +42,11 @@ public class Review {
         this.reviewId = reviewId;
     }
 
-    public int getRating() {
+    public float getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(float rating) {
         this.rating = rating;
     }
 
@@ -43,6 +56,14 @@ public class Review {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public User getUser() {

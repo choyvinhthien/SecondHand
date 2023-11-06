@@ -4,19 +4,45 @@
  */
 package dto;
 
+import java.math.BigDecimal;
+
 public class CartItem {
     private int cartItemId;
     private int quantity;
     private Product product;
     private ShoppingCart cart;
+    private BigDecimal price;
     
     public CartItem() {
     }
-    
-    public CartItem(int quantity, Product product, ShoppingCart cart) {
+
+    public CartItem(int cartItemId, int quantity, Product product, ShoppingCart cart, BigDecimal price) {
+        this.cartItemId = cartItemId;
         this.quantity = quantity;
         this.product = product;
         this.cart = cart;
+        this.price = price;
+    }
+    
+    public CartItem(int quantity, Product product, ShoppingCart cart, BigDecimal price) {
+        this.quantity = quantity;
+        this.product = product;
+        this.cart = cart;
+        this.price = price;
+    }
+
+    public CartItem(int quantity, Product product, BigDecimal price) {
+        this.quantity = quantity;
+        this.product = product;
+        this.price = price;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     public int getCartItemId() {

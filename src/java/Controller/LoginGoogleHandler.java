@@ -73,7 +73,9 @@ public class LoginGoogleHandler extends HttpServlet {
             if(user==null){
                 user = new User();
                 user.setEmail(userGoogleDto.getEmail());
+                user.setUsername(userGoogleDto.getEmail());
                 user.setName(splitEmailToUsername(userGoogleDto.getEmail()));
+                user.setRole("2");
                 session.setAttribute("isEmail", true);
             }else{
                 session.setAttribute("isEmail", false);

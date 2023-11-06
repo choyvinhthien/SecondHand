@@ -35,17 +35,24 @@ public class AccountManagerController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String indexPage = request.getParameter("index");
+        String search = request.getParameter("search");
         if(indexPage==null){
             indexPage = "1";
         }
         int index = Integer.parseInt(indexPage);
         DAO dao = new DAO();
         HttpSession session=request.getSession();
+        User user = new User();
         int count = dao.getTotal("user");
         int endPage = count/10;
         if(count%10!=0) endPage++;
-        List<User> listA = dao.pagingAccounts(index);
-        session.setAttribute("ListAllUsers", listA);
+        List<User> userList = dao.pagingAccounts(index);
+        userList.remove((User)session.getAttribute("user"));
+        if (search!=null) {
+            userList = user.findUsersByString(userList,search);
+        }
+        session.setAttribute("ListAllUsers", userList);
+        session.setAttribute("search", search);
         request.setAttribute("endPage", endPage);
         request.setAttribute("tag", index);
         request.getRequestDispatcher("accountManager.jsp").forward(request, response);
@@ -96,15 +103,6 @@ public class AccountManagerController extends HttpServlet {
                     dao.deleteAccount(user_id);
                     processRequest(request, response);
                 }
-                break;
-            case "search":
-                String search = request.getParameter("search");
-                List<User> userList = dao.getAllUsers();
-                userList.remove((User)session.getAttribute("user"));
-                userList = user.findUsersByString(userList,search);
-                session.setAttribute("ListAllUsers", userList);
-                session.setAttribute("search", search);
-                request.getRequestDispatcher("accountManager.jsp").forward(request, response);
                 break;
             case "Add":
                 String username = request.getParameter("username");

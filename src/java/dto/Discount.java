@@ -4,25 +4,36 @@
  */
 package dto;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Discount {
     private int id;
     private String code;
-    private int discountAmount;
     private float discountPercent;
     private Date validFrom;
     private Date validTo;
+    private String status;
     
     public Discount() {
     }
-    
-    public Discount(String code, int discountAmount, float discountPercent, Date validFrom, Date validTo) {
+
+    public Discount(int id, String code, float discountPercent, Date validFrom, Date validTo, String status) {
+        this.id = id;
         this.code = code;
-        this.discountAmount = discountAmount;
         this.discountPercent = discountPercent;
         this.validFrom = validFrom;
         this.validTo = validTo;
+        this.status = status;
+    }
+    
+    public Discount(String code, float discountPercent, Date validFrom, Date validTo, String status) {
+        this.code = code;
+        this.discountPercent = discountPercent;
+        this.validFrom = validFrom;
+        this.validTo = validTo;
+        this.status = status;
     }
     
     public int getId() {
@@ -39,14 +50,6 @@ public class Discount {
     
     public void setCode(String code) {
         this.code = code;
-    }
-    
-    public int getDiscountAmount() {
-        return discountAmount;
-    }
-    
-    public void setDiscountAmount(int discountAmount) {
-        this.discountAmount = discountAmount;
     }
     
     public float getDiscountPercent() {
@@ -73,6 +76,32 @@ public class Discount {
         this.validTo = validTo;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    public List<Discount> findDiscountssByString(List<Discount> discountList, String searchString) {
+
+        List<Discount> matchingDiscounts = new ArrayList<>();
+
+        // Convert the search string to lowercase for case-insensitive search
+        String lowerSearchString = searchString.toLowerCase();
+
+        for (Discount discount : discountList) {
+            if (containsString(discount, lowerSearchString)) {
+                matchingDiscounts.add(discount);
+            }
+        }
+
+        return matchingDiscounts;
+    }
+    public boolean containsString(Discount discount, String searchString) {
+        return String.valueOf(discount.getDiscountPercent()).contains(searchString)
+                || discount.getCode().toLowerCase().contains(searchString);
+    }
 
     @Override
     public String toString() {

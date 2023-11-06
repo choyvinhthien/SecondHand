@@ -34,81 +34,64 @@
                 </div> 
                 <div class="panel-body">
 
-                    <form onsubmit="return checkValid()" class="form-horizontal" role="form">
+                    <form action="productManagerController" method="POST" enctype="multipart/form-data">
 
                         <div class="form-group">
-                            <label for="name" class="col-sm-3 control-label">Seller_id</label>
+                            <label for="name" class="col-sm-3 control-label">Seller ID</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" name="sellerId" id="sellerId" placeholder="${sessionScope.user.getCustomerId()}" disabled>
+                                <input type="text" class="form-control" name="sellerId" id="sellerId" placeholder="${sessionScope.user.getUserId()}" disabled>
                             </div>
                         </div> 
 
                         <div class="form-group">
-                            <label for="name" class="col-sm-3 control-label">Product name</label>
+                            <label for="name" class="col-sm-3 control-label">Product Name</label>
                             <div class="col-sm-9">
+                                <label class="control-label small">Product Name:</label>
                                 <input type="text" class="form-control" name="name" id="name" placeholder="Product name" required>
                             </div>
-                        </div> 
-
-                        <div class="form-group">
-                            <label for="category" class="col-sm-3 control-label">Product category</label>
-                            <div class="col-sm-3">
-                                <select id="category" name="category" class="form-control">
-                                    <option value="">Choose option</option>
-                                    <option value="1">Shirts</option>
-                                    <option value="2">Dresses</option>
-                                    <option value="3">Jeans</option>
-                                    <option value="4">Swimwears</option>
-                                    <option value="5">Sleepwears</option>
-                                    <option value="6">Sportswears</option>
-                                    <option value="7">Jumpsuits</option>
-                                    <option value="8">Blazers</option>
-                                    <option value="9">Jackets</option>
-                                    <option value="10">Shoes</option>
-                                </select>
-                            </div>
-                            <div class="col-sm-3">
-                                <p id="message" style="color: red;"></p>
-                            </div>
-                        </div> 
+                        </div>  
                         
                         <div class="form-group">
-                            <label for="description" class="col-sm-3 control-label">Product description</label>
+                            <label for="description" class="col-sm-3 control-label">Product Description</label>
                             <div class="col-sm-9">
+                                <label class="control-label small">Description:</label>
                                 <textarea name="description" id="description" class="form-control"></textarea>
                             </div>
                         </div> 
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Quantity</label>
-                            <div class="col-sm-3"> 
-                                <label class="control-label small">Quantity current have:</label>
-                                <input type="number" min="0" class="form-control" name="quantity_current" id="quantity_current" placeholder="quantity current have" required>
-                            </div>
-                            <div class="col-sm-3">   
-                                <label class="control-label small">Quantity sold:</label>
-                                <input type="number" min="0" class="form-control" name="quantity_sold" id="quantity_sold" placeholder="quantity sold">
-                            </div>         
+                            <div class="col-sm-9"> 
+                                <label class="control-label small">Quantity:</label>
+                                <input type="number" min="0" class="form-control" name="quantity" id="quantity" placeholder="Quantity" required>
+                            </div>     
                         </div> 
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Price</label>
-                            <div class="col-sm-3"> 
-                                <label class="control-label small">New price:</label>
-                                <input type="number" min="0" class="form-control" name="new_price" id="new_price" placeholder="new price" required>
-                            </div>
-                            <div class="col-sm-3">   
-                                <label class="control-label small">Old price:</label>
-                                <input type="number" min="0" class="form-control" name="old_price" id="old_price" placeholder="old price">
-                            </div>         
+                            <div class="col-sm-9"> 
+                                <label class="control-label small">Price:</label>
+                                <input type="number" min="0" class="form-control" name="price" id="price" placeholder="Price" required>
+                            </div>     
                         </div> 
                         <div class="form-group">
-                            <label for="name" class="col-sm-3 control-label">URL image</label>
+                            <label for="name" class="col-sm-3 control-label">Image</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="file_img" name="file_img" required>
+                                <label class="control-label small">Image:</label>
+                                <input name="images" type="file" class="form-control" placeholder="Enter Image" multiple required>
                             </div>
                         </div> 
-
+                        <div class="form-group">
+                            <label for="category" class="col-sm-3 control-label">Product Category</label>
+                            <div class="col-sm-3">
+                                <label class="control-label small">Category:</label>
+                                <select name="category" class="form-select" aria-label="Default select example">
+                                    <c:forEach items="${sessionScope.listCC}" var="o">
+                                        <option value="${o.categoryId}">${o.name}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                        </div>
                         <hr>
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-9">

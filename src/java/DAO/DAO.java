@@ -4,13 +4,27 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import Connect.DBconnect;
+import dto.CartItem;
 import dto.Category;
+import dto.Chatroom;
+import dto.Discount;
+import dto.Image;
+import dto.Message;
+import dto.OrderItem;
+import dto.OrderTable;
 import dto.Product;
+import dto.Review;
+import dto.ShoppingCart;
 import dto.User;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.Part;
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.util.Base64;
+import static java.util.Base64.getEncoder;
+import java.util.Random;
 
 public class DAO extends DBconnect {
 
@@ -160,6 +174,58 @@ public class DAO extends DBconnect {
         }
         return list;
     }
+    public List<User> getAllCustomers() {
+        List<User> list = new ArrayList<>();
+        String queryString = "SELECT * from [user] WHERE role = '2'";
+
+        try (PreparedStatement ps = connection.prepareStatement(queryString);
+             ResultSet result = ps.executeQuery()) {
+
+            while (result.next()) {
+                User user = new User(
+                        result.getInt(1),
+                        result.getString(2),
+                        result.getString(3),
+                        result.getString(4),
+                        result.getString(5),
+                        result.getString(6),
+                        result.getString(7),
+                        result.getString(8)
+                );
+                list.add(user);
+            }
+        } catch (SQLException e) {
+            // Handle the exception according to your application's requirements
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public List<User> getAllShippers() {
+        List<User> list = new ArrayList<>();
+        String queryString = "SELECT * from [user] WHERE role = '3'";
+
+        try (PreparedStatement ps = connection.prepareStatement(queryString);
+             ResultSet result = ps.executeQuery()) {
+
+            while (result.next()) {
+                User user = new User(
+                        result.getInt(1),
+                        result.getString(2),
+                        result.getString(3),
+                        result.getString(4),
+                        result.getString(5),
+                        result.getString(6),
+                        result.getString(7),
+                        result.getString(8)
+                );
+                list.add(user);
+            }
+        } catch (SQLException e) {
+            // Handle the exception according to your application's requirements
+            e.printStackTrace();
+        }
+        return list;
+    }
     public User checkEmailLogin(String email){
         User user = null;
         String queryString = "SELECT * from  [user] WHERE email = ?";
@@ -278,6 +344,17 @@ public class DAO extends DBconnect {
             e.printStackTrace();
         }
     }
+    public void deleteProduct(int product_id){
+        String queryString = "DELETE FROM [product] WHERE [product_id] = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(queryString);
+            ps.setInt(1, product_id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
     public List<Product> getProductByUserID(int id) {
         List<Product> list = new ArrayList<>();
         String queryString = "select * from product\n"
@@ -289,12 +366,14 @@ public class DAO extends DBconnect {
             while (rs.next()) {
                 list.add(new Product(rs.getInt(1),
                         rs.getString(2),
-                        rs.getBigDecimal(3),
+                        rs.getBigDecimal(3).setScale(1, BigDecimal.ROUND_DOWN),
                         rs.getInt(4),
                         rs.getString(5),
                         rs.getInt(6),
                         getCategoryById(rs.getInt(7)),
-                        getUserByID(rs.getInt(8))
+                        getUserByID(rs.getInt(8)),
+                        rs.getString(9),
+                        getImagesByProductID(rs.getInt(1))
                 ));
             }
         } catch (Exception e) {
@@ -309,8 +388,8 @@ public class DAO extends DBconnect {
             ps.setInt(1, categoryId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int id = rs.getInt("category_id");
-                String name = rs.getString("category_name");
+                int id = rs.getInt(1);
+                String name = rs.getString(2);
                 // Assuming the Category class has a constructor that accepts category_id and category_name
                 category = new Category(id, name);
             }
@@ -339,8 +418,33 @@ public class DAO extends DBconnect {
         }
         return list;
     }
-    public void addProduct(Product product, List<Part> imageParts){
-        String query = "INSERT INTO [product] (name, price, quantity, description, quantity_sold, category_id, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    public List<Product> getAllProducts() {
+        List<Product> list = new ArrayList<>();
+        String queryString = "SELECT * from product";
+
+        try (PreparedStatement ps = connection.prepareStatement(queryString);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                list.add(new Product(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getBigDecimal(3).setScale(1, BigDecimal.ROUND_DOWN),
+                        rs.getInt(4),
+                        rs.getString(5),
+                        rs.getInt(6),
+                        getCategoryById(rs.getInt(7)),
+                        getUserByID(rs.getInt(8)),
+                        rs.getString(9),
+                        getImagesByProductID(rs.getInt(1))
+                ));
+            }
+        } catch (SQLException e) {
+            // Handle the exception according to your application's requirements
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public void addProduct(Product product){
+        String query = "INSERT INTO [product] (name, price, quantity, description, quantity_sold, category_id, user_id, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, product.getName());
@@ -350,11 +454,15 @@ public class DAO extends DBconnect {
             ps.setInt(5, product.getQuantitySold());
             ps.setInt(6, product.getCategory().getCategoryId());
             ps.setInt(7, product.getUser().getUserId());
+            ps.setString(8, "0");
             ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        String query2 = "SELECT * FROM product WHERE name = ? AND price = ? AND quantity = ? AND description = ? AND quantity_sold = ? AND category_id = ? AND user_id = ?";
+    }
+    public int findProductId(Product product){
+        int product_id=0;
+        String query2 = "SELECT * FROM product WHERE name = ? AND price = ? AND quantity = ? AND description = ? AND quantity_sold = ? AND category_id = ? AND user_id = ? AND status = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(query2);
             ps.setString(1, product.getName());
@@ -364,26 +472,27 @@ public class DAO extends DBconnect {
             ps.setInt(5, product.getQuantitySold());
             ps.setInt(6, product.getCategory().getCategoryId());
             ps.setInt(7, product.getUser().getUserId());
+            ps.setString(8, "0");
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                product.setProductId(rs.getInt(1));
+                product_id = rs.getInt(1);
+                return product_id;
             }
         }catch (Exception e) {
             e.printStackTrace();
         }
-        String query3 = "INSERT INTO images (product_id, img) VALUES (?, ?)";
-        try {
-            PreparedStatement ps = connection.prepareStatement(query3);
-            for (Part imagePart : imageParts) {
-                InputStream imageInputStream = imagePart.getInputStream();
-                byte[] imageBytes = imageInputStream.readAllBytes();
-                ps.setInt(1, product.getProductId());
-                ps.setBytes(2, imageBytes);
-                ps.executeUpdate();
+        return product_id;
+    }
+    public void addImage(int product_id, byte[] imageData){
+        String query3 = "INSERT INTO image (product_id, img) VALUES (?, ?)";
+            try {
+                PreparedStatement ps = connection.prepareStatement(query3);
+                    ps.setInt(1, product_id);
+                    ps.setBytes(2, imageData);
+                    ps.executeUpdate();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
     public int getTotal(String tablename){
         String query = "SELECT COUNT(*) FROM ["+tablename+"]";
@@ -409,14 +518,71 @@ public class DAO extends DBconnect {
             ps.setInt(2, (index-1)*10);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
+                list.add(new Product(rs.getInt(1), 
+                        rs.getString(2), 
+                        rs.getBigDecimal(3).setScale(1, BigDecimal.ROUND_DOWN), 
+                        rs.getInt(4), 
+                        rs.getString(5), 
+                        rs.getInt(6), 
+                        getCategoryById(rs.getInt(7)), 
+                        getUserByID(rs.getInt(8)),
+                        rs.getString(9),
+                        getImagesByProductID(rs.getInt(1))
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public List<Product> pagingProducts9Rows(int index, int user_id){
+        List<Product> list = new ArrayList<>();
+        String query = "SELECT * FROM [product] where [user_id] = ?\n" +
+                        "ORDER BY [product_id]\n" +
+                        "OFFSET ? ROWS FETCH next 9 ROWS ONLY";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, user_id);
+            ps.setInt(2, (index-1)*9);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Product(rs.getInt(1), 
+                        rs.getString(2), 
+                        rs.getBigDecimal(3).setScale(1, BigDecimal.ROUND_DOWN), 
+                        rs.getInt(4), 
+                        rs.getString(5), 
+                        rs.getInt(6), 
+                        getCategoryById(rs.getInt(7)), 
+                        getUserByID(rs.getInt(8)),
+                        rs.getString(9),
+                        getImagesByProductID(rs.getInt(1))
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public List<Product> pagingAllProducts(int index){
+        List<Product> list = new ArrayList<>();
+        String query = "SELECT * FROM [product]\n" +
+                        "ORDER BY [product_id]\n" +
+                        "OFFSET ? ROWS FETCH next 10 ROWS ONLY";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, (index-1)*10);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
                 list.add(new Product(rs.getInt(1),
                         rs.getString(2),
-                        rs.getBigDecimal(3),
+                        rs.getBigDecimal(3).setScale(1, BigDecimal.ROUND_DOWN),
                         rs.getInt(4),
                         rs.getString(5),
                         rs.getInt(6),
                         getCategoryById(rs.getInt(7)),
-                        getUserByID(rs.getInt(8))
+                        getUserByID(rs.getInt(8)),
+                        rs.getString(9),
+                        getImagesByProductID(rs.getInt(1))
                 ));
             }
         } catch (Exception e) {
@@ -450,8 +616,908 @@ public class DAO extends DBconnect {
         }
         return list;
     }
+    public List<Category> pagingCategories(int index){
+        List<Category> list = new ArrayList<>();
+        String query = "SELECT * FROM [category]\n" +
+                        "ORDER BY [category_id]\n" +
+                        "OFFSET ? ROWS FETCH next 10 ROWS ONLY";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, (index-1)*10);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Category(rs.getInt(1), rs.getString(2)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public List<Discount> pagingDiscounts(int index){
+        List<Discount> list = new ArrayList<>();
+        String query = "SELECT * FROM [discount]\n" +
+                        "ORDER BY [id]\n" +
+                        "OFFSET ? ROWS FETCH next 10 ROWS ONLY";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, (index-1)*10);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Discount(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getFloat(3),
+                        rs.getDate(4),
+                        rs.getDate(5), 
+                        rs.getString(6))
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public Product getProductByProductID(int id) {
+        Product p = new Product();
+        String queryString = "select * from product\n"
+                + "where [product_id] = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(queryString);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                p = new Product(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getBigDecimal(3).setScale(1, BigDecimal.ROUND_DOWN),
+                        rs.getInt(4),
+                        rs.getString(5),
+                        rs.getInt(6),
+                        getCategoryById(rs.getInt(7)),
+                        getUserByID(rs.getInt(8)),
+                        rs.getString(9)
+                );
+            }
+        } catch (Exception e) {
+        }
+        return p;
+    }
+    public Product getProductWithImagesByProductID(int id) {
+        Product p = new Product();
+        String queryString = "select * from product\n"
+                + "where [product_id] = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(queryString);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                p = new Product(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getBigDecimal(3).setScale(1, BigDecimal.ROUND_DOWN),
+                        rs.getInt(4),
+                        rs.getString(5),
+                        rs.getInt(6),
+                        getCategoryById(rs.getInt(7)),
+                        getUserByID(rs.getInt(8)),
+                        rs.getString(9),
+                        getImagesByProductID(rs.getInt(1))
+                );
+            }
+        } catch (Exception e) {
+        }
+        return p;
+    }
+    public List<Image> getImagesByProductID(int product_id) {
+        List<Image> list = new ArrayList<>();
+        String queryString = "select * from image\n"
+                + "where [product_id] = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(queryString);
+            ps.setInt(1, product_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+//                InputStream imageStream = rs.getBlob(3).getBinaryStream();
+//                byte[] imageBytes = imageStream.readAllBytes();
+//                String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+                byte[] imageBytes = rs.getBytes(3);
+                list.add(new Image(rs.getInt(1), getProductByProductID(rs.getInt(2)), Base64.getEncoder().encodeToString(imageBytes)));
+            }
+        } catch (Exception e) {
+        }
+        return list;
+    }
+    public void deleteImagesByProductId(int product_id){
+        String queryString = "DELETE FROM [image] WHERE [product_id] = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(queryString);
+            ps.setInt(1, product_id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+    public void createShoppingCart(int user_id) {
+        String query = "INSERT INTO [Shopping_cart] (user_id) VALUES (?)";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, user_id);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public ShoppingCart getShoppingCartByUserID(int user_id) {
+        ShoppingCart shoppingCart = null;
+        DAO dao = new DAO();
+        String query = "SELECT * FROM [Shopping_cart] WHERE [user_id] = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, user_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                shoppingCart=(new ShoppingCart(rs.getInt(1), dao.getUserByID(rs.getInt(2)), getCartItemsByCartID(rs.getInt(1))));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return shoppingCart;
+    }
+    public ShoppingCart getShoppingCartByCartID(int cart_id) {
+        ShoppingCart shoppingCart = null;
+        DAO dao = new DAO();
+        String query = "SELECT * FROM [Shopping_cart] WHERE [cart_id] = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, cart_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                shoppingCart=(new ShoppingCart(rs.getInt(1), dao.getUserByID(rs.getInt(2))));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return shoppingCart;
+    }
+    public List<CartItem> getCartItemsByCartID(int cart_id) {
+        List<CartItem> list = new ArrayList<>();
+        DAO dao = new DAO();
+        String query = "SELECT * FROM [cart_item] WHERE [cart_id] = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, cart_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add((new CartItem(rs.getInt(1), 
+                        rs.getInt(2), 
+                        dao.getProductWithImagesByProductID(rs.getInt(3)), 
+                        getShoppingCartByCartID(rs.getInt(4)), 
+                        rs.getBigDecimal(5).setScale(1, BigDecimal.ROUND_DOWN))));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public CartItem getCartItemByCartItemID(int cart_item_id) {
+        CartItem cartItem = new CartItem();
+        DAO dao = new DAO();
+        String query = "SELECT * FROM [cart_item] WHERE [cart_item_id] = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, cart_item_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                cartItem = new CartItem(rs.getInt(1), 
+                        rs.getInt(2), 
+                        dao.getProductWithImagesByProductID(rs.getInt(3)), 
+                        getShoppingCartByCartID(rs.getInt(4)), 
+                        rs.getBigDecimal(5).setScale(1, BigDecimal.ROUND_DOWN));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return cartItem;
+    }
+    public void addToCart(CartItem cartItem) {
+        String query = "INSERT INTO [cart_item] (quantity, product_id, cart_id, price) VALUES (?,?,?,?)";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, cartItem.getQuantity());
+            ps.setInt(2, cartItem.getProduct().getProductId());
+            ps.setInt(3, cartItem.getCart().getCartId());
+            ps.setBigDecimal(4, cartItem.getProduct().getPrice());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void addToSimiliarCart(CartItem cartItem, int quantity, BigDecimal price) {
+        String query = "UPDATE [cart_item] SET quantity = ?, price = ? WHERE [cart_item_id] = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, quantity);
+            ps.setBigDecimal(2, price);
+            ps.setInt(3, cartItem.getCartItemId());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void deleteCartItem(int cart_item_id){
+        String queryString = "DELETE FROM [cart_item] WHERE [cart_item_id] = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(queryString);
+            ps.setInt(1, cart_item_id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+    public Discount getDiscountByCode(String code){
+        Discount discount = new Discount();
+        DAO dao = new DAO();
+        String query = "SELECT * FROM [discount] WHERE [code] = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, code);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                discount = new Discount(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getFloat(3), 
+                        rs.getDate(4),
+                        rs.getDate(5),
+                        rs.getString(6)
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return discount;
+    }
+    public void createOrderTable(OrderTable orderTable) {
+        String query = "INSERT INTO [platform_online].[dbo].[order_table] " +
+                "([order_id], [ship_name], [ship_mail], [ship_phone], [ship_address], [order_date], " +
+                "[ship_fee], [discount_code], [total_amount], [payment_method], [status], [user_id], " +
+                "[seller_id]) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, orderTable.getOrderId());
+            ps.setString(2, orderTable.getShipName());
+            ps.setString(3, orderTable.getShipMail());
+            ps.setString(4, orderTable.getShipPhone());
+            ps.setString(5, orderTable.getShipAddress());
+            ps.setObject(6, new java.sql.Date(orderTable.getOrderDate().getTime()));
+            ps.setBigDecimal(7, orderTable.getShipFee());
+            ps.setString(8, orderTable.getDiscount().getCode());
+            ps.setBigDecimal(9, orderTable.getTotalAmount());
+            ps.setString(10, orderTable.getPaymentMethod());
+            ps.setString(11, orderTable.getStatus());
+            ps.setInt(12, orderTable.getCustomer().getUserId());
+            ps.setInt(13, orderTable.getSeller().getUserId());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void addOrderItemToOrderTable(OrderItem orderItem){
+        String query3 = "INSERT INTO order_item ([quantity], [order_id], [product_id], [price]) VALUES (?, ?, ?, ?)";
+            try {
+                PreparedStatement ps = connection.prepareStatement(query3);
+                    ps.setInt(1, orderItem.getQuantity());
+                    ps.setInt(2, orderItem.getOrderTable().getOrderId());
+                    ps.setInt(3, orderItem.getProduct().getProductId());
+                    ps.setBigDecimal(4, orderItem.getPrice());
+                    ps.executeUpdate();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+    }
+    public int randomOrderID(String tablename){
+        int i=0;
+        Random r=new Random();
+        try {
+                while (true) {
+                    i = r.nextInt(1000);
+                    String sqlQuery = "SELECT * FROM " + tablename + " WHERE order_id=?";
+                    PreparedStatement ps = connection.prepareStatement(sqlQuery);
+                    ps.setString(1, String.valueOf(i));
+                    ResultSet result = ps.executeQuery();
+                    if (!result.next()) {
+                        return i;
+                    }
+                }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return i;
+    }
+    public OrderTable getOrderTableByOrderIdWithoutOrderItems(int order_id) {
+        DAO dao = new DAO();
+        OrderTable orderTable = new OrderTable();
+        String queryString = "SELECT [order_id], [ship_name], [ship_mail], [ship_phone], [ship_address], " +
+                    "[order_date], [ship_fee], [discount_code], [total_amount], [payment_method], [status], " +
+                    "[user_id], [seller_id] " +
+                    "FROM [platform_online].[dbo].[order_table] " +
+                    "WHERE [order_id] = ? " +
+                    "ORDER BY order_date DESC";
+        try {
+            PreparedStatement ps = connection.prepareStatement(queryString);
+            ps.setInt(1, order_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                orderTable = new OrderTable(rs.getInt(1), 
+                        rs.getString(2), 
+                        rs.getString(3), 
+                        rs.getString(4), 
+                        rs.getString(5),
+                        rs.getDate(6), 
+                        rs.getBigDecimal(7).setScale(1, BigDecimal.ROUND_DOWN), 
+                        dao.getDiscountByCode(rs.getString(8)), 
+                        rs.getBigDecimal(9).setScale(1, BigDecimal.ROUND_DOWN), 
+                        rs.getString(10), 
+                        rs.getString(11), 
+                        dao.getUserByID(rs.getInt(12)),
+                        dao.getUserByID(rs.getInt(13))
+                );
+            }
+        } catch (Exception e) {
+        }
+        return orderTable;
+    }
+    public OrderTable getOrderTableByOrderIdWithOrderItems(int order_id) {
+        DAO dao = new DAO();
+        OrderTable orderTable = new OrderTable();
+        String queryString = "SELECT [order_id], [ship_name], [ship_mail], [ship_phone], [ship_address], " +
+                    "[order_date], [ship_fee], [discount_code], [total_amount], [payment_method], [status], " +
+                    "[user_id], [seller_id] " +
+                    "FROM [platform_online].[dbo].[order_table] " +
+                    "WHERE [order_id] = ? " +
+                    "ORDER BY order_date DESC";
+        try {
+            PreparedStatement ps = connection.prepareStatement(queryString);
+            ps.setInt(1, order_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                orderTable = new OrderTable(rs.getInt(1), 
+                        rs.getString(2), 
+                        rs.getString(3), 
+                        rs.getString(4), 
+                        rs.getString(5),
+                        rs.getDate(6), 
+                        rs.getBigDecimal(7).setScale(1, BigDecimal.ROUND_DOWN), 
+                        dao.getDiscountByCode(rs.getString(8)), 
+                        rs.getBigDecimal(9).setScale(1, BigDecimal.ROUND_DOWN), 
+                        rs.getString(10), 
+                        rs.getString(11), 
+                        dao.getUserByID(rs.getInt(12)),
+                        dao.getUserByID(rs.getInt(13)),
+                        dao.getOrderItemsByOrderId(rs.getInt(1))
+                );
+            }
+        } catch (Exception e) {
+        }
+        return orderTable;
+    }
+    public List<OrderItem> getOrderItemsByOrderId(int order_id) {
+        DAO dao = new DAO();
+        List<OrderItem> orderItems = new ArrayList<>();
+        String queryString = "SELECT [order_item_id], [quantity], [order_id], [product_id], [price] " +
+                    "FROM [platform_online].[dbo].[order_item] " +
+                    "WHERE [order_id] = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(queryString);
+            ps.setInt(1, order_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                orderItems.add(new OrderItem(rs.getInt(1),
+                        rs.getInt(2),
+                        dao.getOrderTableByOrderIdWithoutOrderItems(rs.getInt(3)),
+                        rs.getBigDecimal(5).setScale(0, BigDecimal.ROUND_DOWN), 
+                        dao.getProductWithImagesByProductID(rs.getInt(4))));
+            }
+        } catch (Exception e) {
+        }
+        return orderItems;
+    }
+    public List<OrderTable> getOrderTableByCustomerID(int customer_id) {
+        DAO dao = new DAO();
+        List<OrderTable> orderTables = new ArrayList<>();
+        String queryString = "SELECT * " +
+                    "FROM [platform_online].[dbo].[order_table] " +
+                    "WHERE [user_id] = ? " +
+                    "ORDER BY order_date DESC";
+        try {
+            PreparedStatement ps = connection.prepareStatement(queryString);
+            ps.setInt(1, customer_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                orderTables.add(new OrderTable(rs.getInt(1),
+                        rs.getString(2), 
+                        rs.getString(3), 
+                        rs.getString(4), 
+                        rs.getString(5),
+                        rs.getDate(6), 
+                        rs.getBigDecimal(7).setScale(1, BigDecimal.ROUND_DOWN), 
+                        dao.getDiscountByCode(rs.getString(8)), 
+                        rs.getBigDecimal(9).setScale(1, BigDecimal.ROUND_DOWN), 
+                        rs.getString(10), 
+                        rs.getString(11), 
+                        getUserByID(rs.getInt(12)), 
+                        getUserByID(rs.getInt(13)),
+                        dao.getOrderItemsByOrderId(rs.getInt(1))
+                ));
+            }
+        } catch (Exception e) {
+        }
+        return orderTables;
+    }
+    public void changeStatusForProduct(Product product, String status) {
+        String query = "UPDATE [product] SET status = ? WHERE [product_id] = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, status);
+            ps.setInt(2, product.getProductId());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public List<Product> getAllActiveProducts() {
+        List<Product> list = new ArrayList<>();
+        String queryString = "SELECT * from product WHERE status = '1'";
+
+        try (PreparedStatement ps = connection.prepareStatement(queryString);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                list.add(new Product(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getBigDecimal(3).setScale(0, BigDecimal.ROUND_DOWN),
+                        rs.getInt(4),
+                        rs.getString(5),
+                        rs.getInt(6),
+                        getCategoryById(rs.getInt(7)),
+                        getUserByID(rs.getInt(8)),
+                        rs.getString(9),
+                        getImagesByProductID(rs.getInt(1))
+                ));
+            }
+        } catch (SQLException e) {
+            // Handle the exception according to your application's requirements
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public List<Product> pagingAllActiveProducts9Rows(int index){
+        List<Product> list = new ArrayList<>();
+        String query = "SELECT * FROM [product] WHERE status = '1'\n" +
+                        "ORDER BY [product_id]\n" +
+                        "OFFSET ? ROWS FETCH next 9 ROWS ONLY";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, (index-1)*9);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Product(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getBigDecimal(3).setScale(1, BigDecimal.ROUND_DOWN),
+                        rs.getInt(4),
+                        rs.getString(5),
+                        rs.getInt(6),
+                        getCategoryById(rs.getInt(7)),
+                        getUserByID(rs.getInt(8)),
+                        rs.getString(9),
+                        getImagesByProductID(rs.getInt(1))
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public List<OrderTable> getAllOrderTableForShipper() {
+        DAO dao = new DAO();
+        List<OrderTable> orderTables = new ArrayList<>();
+        String queryString = "SELECT * " +
+                    "FROM [platform_online].[dbo].[order_table] " +
+                    "WHERE status = '2'";
+        try {
+            PreparedStatement ps = connection.prepareStatement(queryString);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                orderTables.add(new OrderTable(rs.getInt(1),
+                        rs.getString(2), 
+                        rs.getString(3), 
+                        rs.getString(4), 
+                        rs.getString(5),
+                        rs.getDate(6), 
+                        rs.getBigDecimal(7).setScale(1, BigDecimal.ROUND_DOWN), 
+                        dao.getDiscountByCode(rs.getString(8)), 
+                        rs.getBigDecimal(9).setScale(1, BigDecimal.ROUND_DOWN), 
+                        rs.getString(10), 
+                        rs.getString(11), 
+                        getUserByID(rs.getInt(12)), 
+                        getUserByID(rs.getInt(13)),
+                        dao.getOrderItemsByOrderId(rs.getInt(1))
+                ));
+            }
+        } catch (Exception e) {
+        }
+        return orderTables;
+    }
+    public List<OrderTable> getOrderTableBySellerId(int seller_id) {
+        DAO dao = new DAO();
+        List<OrderTable> orderTables = new ArrayList<>();
+        String queryString = "SELECT * " +
+                    "FROM [platform_online].[dbo].[order_table] " +
+                    "WHERE [seller_id] = ? AND status = '1' " +
+                    "ORDER BY order_date DESC";
+        try {
+            PreparedStatement ps = connection.prepareStatement(queryString);
+            ps.setInt(1, seller_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                orderTables.add(new OrderTable(rs.getInt(1),
+                        rs.getString(2), 
+                        rs.getString(3), 
+                        rs.getString(4), 
+                        rs.getString(5),
+                        rs.getDate(6), 
+                        rs.getBigDecimal(7).setScale(1, BigDecimal.ROUND_DOWN), 
+                        dao.getDiscountByCode(rs.getString(8)), 
+                        rs.getBigDecimal(9).setScale(1, BigDecimal.ROUND_DOWN), 
+                        rs.getString(10), 
+                        rs.getString(11), 
+                        getUserByID(rs.getInt(12)), 
+                        getUserByID(rs.getInt(13)),
+                        dao.getOrderItemsByOrderId(rs.getInt(1))
+                ));
+            }
+        } catch (Exception e) {
+        }
+        return orderTables;
+    }
+    public void changeStatusForOrderTable(String status, int order_id) {
+        String query = "UPDATE [order_table] SET status = ? WHERE [order_id] = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, status);
+            ps.setInt(2, order_id);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void changeStatusAndShipperForOrderTable(String status, int shipper_id, int order_id) {
+        String query = "UPDATE [order_table] SET status = ?, shipper_id = ? WHERE [order_id] = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, status);
+            ps.setInt(2, shipper_id);
+            ps.setInt(3, order_id);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void deleteShoppingCart(int cart_id){
+        String queryString = "DELETE FROM [shopping_cart] WHERE [cart_id] = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(queryString);
+            ps.setInt(1, cart_id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+    public void deleteCartItemByCartId(int cart_id){
+        String queryString = "DELETE FROM [cart_item] WHERE [cart_id] = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(queryString);
+            ps.setInt(1, cart_id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+    public void changeProductQuantity(Product product, int new_quantity, int quantity_sold, String status) {
+        String query = "UPDATE [product] SET quantity = ?, quantity_sold = ?, status = ? WHERE [product_id] = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, new_quantity);
+            ps.setInt(2, quantity_sold);
+            ps.setString(3, status);
+            ps.setInt(4, product.getProductId());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public List<OrderTable> getOrderTableByShipperId(int shipper_id) {
+        DAO dao = new DAO();
+        List<OrderTable> orderTables = new ArrayList<>();
+        String queryString = "SELECT * " +
+                    "FROM [platform_online].[dbo].[order_table] " +
+                    "WHERE [shipper_id] = ? AND (status = '3' OR status = '4') " +
+                    "ORDER BY order_date DESC";
+        try {
+            PreparedStatement ps = connection.prepareStatement(queryString);
+            ps.setInt(1, shipper_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                orderTables.add(new OrderTable(rs.getInt(1),
+                        rs.getString(2), 
+                        rs.getString(3), 
+                        rs.getString(4), 
+                        rs.getString(5),
+                        rs.getDate(6), 
+                        rs.getBigDecimal(7).setScale(1, BigDecimal.ROUND_DOWN), 
+                        dao.getDiscountByCode(rs.getString(8)), 
+                        rs.getBigDecimal(9).setScale(1, BigDecimal.ROUND_DOWN), 
+                        rs.getString(10), 
+                        rs.getString(11), 
+                        getUserByID(rs.getInt(12)), 
+                        getUserByID(rs.getInt(13)),
+                        dao.getOrderItemsByOrderId(rs.getInt(1))
+                ));
+            }
+        } catch (Exception e) {
+        }
+        return orderTables;
+    }
+    public void addReview(Review review) {
+        String query = "INSERT INTO [platform_online].[dbo].[review] " +
+                "([rating], [comment], [ratingDate], [user_id], [product_id]) " +
+                "VALUES (?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setFloat(1, review.getRating());
+            ps.setString(2, review.getComment());
+            ps.setObject(3, new java.sql.Date(review.getDate().getTime()));
+            ps.setInt(4, review.getUser().getUserId());
+            ps.setInt(5, review.getProduct().getProductId());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public List<Review> getAllReviews() {
+        DAO dao = new DAO();
+        List<Review> list = new ArrayList<>();
+        String queryString = "SELECT * from review";
+
+        try (PreparedStatement ps = connection.prepareStatement(queryString);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Review review = new Review(rs.getInt(1), 
+                        rs.getFloat(2), 
+                        rs.getString(3),
+                        rs.getDate(4),
+                        dao.getUserByID(rs.getInt(5)),
+                        dao.getProductWithImagesByProductID(rs.getInt(6))
+                );
+                list.add(review);
+            }
+        } catch (SQLException e) {
+            // Handle the exception according to your application's requirements
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public List<Review> getReviewsByProductId(int product_id) {
+        DAO dao = new DAO();
+        List<Review> list = new ArrayList<>();
+        String queryString = "SELECT * from review WHERE product_id = ?";
+
+        try {PreparedStatement ps = connection.prepareStatement(queryString);
+            ps.setInt(1, product_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Review review = new Review(rs.getInt(1), 
+                        rs.getFloat(2), 
+                        rs.getString(3),
+                        rs.getDate(4),
+                        dao.getUserByID(rs.getInt(5)),
+                        dao.getProductWithImagesByProductID(rs.getInt(6))
+                );
+                list.add(review);
+            }
+        } catch (SQLException e) {
+            // Handle the exception according to your application's requirements
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public void addChatRoom(int user1_id, int user2_id){
+        String query = "INSERT INTO [chatroom] ([user1Id], [user2Id]) VALUES (?, ?)";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, user1_id);
+            ps.setInt(2, user2_id);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public List<Message> getChatMessages(int roomId) {
+        List<Message> chatMessages = new ArrayList<>();
+        try {
+            // Prepare the SQL statement for retrieving chat messages
+            String sql = "SELECT * FROM [platform_online].[dbo].[message] " +
+                         "WHERE roomId = ? " +
+                         "ORDER BY timestamp ASC";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, roomId);
+
+            // Execute the SQL statement
+            ResultSet rs = ps.executeQuery();
+
+            // Process the result set and populate the chat messages
+            while (rs.next()) {
+                int messageId = rs.getInt(1);
+                int senderId = rs.getInt(2);
+                String senderName = rs.getString(3);
+                String content = rs.getString(4);
+                Date timestamp = rs.getDate(5);
+                int roomID = rs.getInt(6);
+
+                Message message = new Message(messageId, senderId, senderName, content, timestamp,getChatRoomByRoomId(roomID));
+                chatMessages.add(message);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return chatMessages;
+    }
+    public Chatroom getChatRoomByRoomId(int roomID){
+        Chatroom chatroom = null;
+        DAO dao = new DAO();
+        try {
+            String sql = "SELECT * FROM [platform_online].[dbo].[chatroom] " +
+                        "WHERE [roomId] = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, roomID);
+
+            // Execute the SQL statement
+            ResultSet rs = ps.executeQuery();
+
+            // Process the result set and populate the chat messages
+            while (rs.next()) {
+                chatroom = new Chatroom(rs.getInt(1), dao.getUserByID(rs.getInt(2)), dao.getUserByID(rs.getInt(3)));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return chatroom;
+    }
+    public List<Chatroom> getChatRoomsByUserId(int user_id){
+        List<Chatroom> chatrooms = new ArrayList<>();
+        DAO dao = new DAO();
+        try {
+            String sql = "SELECT * FROM [platform_online].[dbo].[chatroom] " +
+                        "WHERE [user1Id] = ? OR [user2Id] = ? ";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, user_id);
+            ps.setInt(2, user_id);
+
+            // Execute the SQL statement
+            ResultSet rs = ps.executeQuery();
+
+            // Process the result set and populate the chat messages
+            while (rs.next()) {
+                chatrooms.add(new Chatroom(rs.getInt(1), dao.getUserByID(rs.getInt(2)), dao.getUserByID(rs.getInt(3)), dao.getChatMessages(rs.getInt(1))));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return chatrooms;
+    }
+    
+    public void addMessage(Message message){
+        String query = "INSERT INTO [message] (senderId, senderName, content, timestamp, roomId) VALUES (?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, message.getSenderId());
+            ps.setString(2, message.getSenderName());
+            ps.setString(3, message.getContent());
+            ps.setObject(4, new java.sql.Date(message.getTimestamp().getTime()));
+            ps.setInt(5, message.getChatroom().getRoomId());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public List<Product> getRandomProduct() {
+        List<Product> list = new ArrayList<>();
+        String query = "SELECT TOP 8 * FROM product ORDER BY NEWID()";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            //ps.setInt(1, limit);
+            ResultSet  rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Product(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getBigDecimal(3).setScale(0, BigDecimal.ROUND_DOWN),
+                        rs.getInt(4),
+                        rs.getString(5),
+                        rs.getInt(6),
+                        getCategoryById(rs.getInt(7)),
+                        getUserByID(rs.getInt(8)),
+                        rs.getString(9),
+                        getImagesByProductID(rs.getInt(1))
+                ));
+            }
+        } catch (Exception e) {
+        }
+        return list;
+    }
+    public List<Product> filterProductByPrice(int start, int end){
+        List<Product> list = new ArrayList<>();
+        String query = "SELECT * FROM product WHERE price > ? AND price <= ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, start);
+            ps.setInt(2, end);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Product(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getBigDecimal(3).setScale(0, BigDecimal.ROUND_DOWN),
+                        rs.getInt(4),
+                        rs.getString(5),
+                        rs.getInt(6),
+                        getCategoryById(rs.getInt(7)),
+                        getUserByID(rs.getInt(8)),
+                        rs.getString(9),
+                        getImagesByProductID(rs.getInt(1))
+                ));
+            }
+        } catch (Exception e) {
+        }
+        return list;
+    }
+    public List<Product> getActiveProductsByCategoryId(int category_id) {
+        List<Product> list = new ArrayList<>();
+        String queryString = "SELECT * from product WHERE status = '1' AND category_id = ?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(queryString);
+            ps.setInt(1, category_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Product(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getBigDecimal(3).setScale(0, BigDecimal.ROUND_DOWN),
+                        rs.getInt(4),
+                        rs.getString(5),
+                        rs.getInt(6),
+                        getCategoryById(rs.getInt(7)),
+                        getUserByID(rs.getInt(8)),
+                        rs.getString(9),
+                        getImagesByProductID(rs.getInt(1))
+                ));
+            }
+        } catch (SQLException e) {
+            // Handle the exception according to your application's requirements
+            e.printStackTrace();
+        }
+        return list;
+    }
     public static void main(String[] args) {
         DAO dao = new DAO();
-        System.out.println(dao.getTotal("user"));
+        List<Message> chatMessages = dao.getChatMessages(1);
+        for (Message message : chatMessages) {
+            System.out.println("Message ID: " + message.getMessageId());
+            System.out.println("Sender ID: " + message.getSenderId());
+            System.out.println("Sender Name: " + message.getSenderName());
+            System.out.println("Content: " + message.getContent());
+            System.out.println("Timestamp: " + message.getTimestamp());
+            System.out.println("Room ID: " + message.getChatroom().getRoomId());
+            System.out.println("----------------------");
+        }
     }
 }

@@ -55,6 +55,9 @@
             .customer-role {
                 color: #0000ff; /* White text color for customer role */
             }
+            .shipper-role {
+                color: #00ff00; /* White text color for shipper role */
+            }
         </style>
     </head>
     
@@ -81,9 +84,9 @@
                             <h2>Manage <b>Accounts</b></h2>
                         </div>
                         <div class="col-lg-5 col-5 text-left">
-                            <form action="AccountManagerController" method="Post">
+                            <form action="AccountManagerController" method="get">
                                 <div class="input-group">
-                                    <input name="search" id="input-search" type="text" class="form-control" placeholder="Search for Categories" value = "<%= search %>">
+                                    <input name="search" id="input-search" type="text" class="form-control" placeholder="Search for Accounts" value = "<%= search %>">
                                     <button type="submit" name="action" value="search" class="btn btn-outline-primary d-flex align-items-center" style="border: none; background: none;">
                                         <span class="input-group-text bg-transparent text-primary">
                                             <i class="fa fa-search"></i>
@@ -122,6 +125,9 @@
                                     <c:if test="${item.getRole() == '2'}">
                                         <td class="align-middle customer-role">Customer</td>
                                     </c:if>
+                                    <c:if test="${item.getRole() == '3'}">
+                                        <td class="align-middle shipper-role">Shipper</td>
+                                    </c:if>
                                     <td class="align-middle">
                                         <form action="AccountManagerController" method="POST" id="signup-form" class="btn">
                                         <input type="hidden" name="user_id" id="user_id" value="${item.getUserId()}"/>
@@ -138,13 +144,11 @@
                     <div class="hint-text">Page <b>${tag}</b></div>
                     <ul class="pagination">
                         <c:forEach begin="1" end="${endPage}" var="i">
-                            <li class="page-item ${tag==i? "acvive" : "" }"><a href="AccountManagerController?index=${i}" class="page-link">${i}</a></li>
+                            <li class="page-item ${tag==i? "acvive" : "" }"><a href="AccountManagerController?index=${i}&search=<%= search %>" class="page-link">${i}</a></li>
                         </c:forEach>
                     </ul>
                 </div>
             </div>
-            <a href="#"><button type="button" class="btn btn-primary">Back to home</button>
-
         </div>
         <!-- Edit Modal HTML -->
         <div id="addAccount" class="modal fade">
@@ -185,6 +189,7 @@
                                 <select name="role" class="form-select" aria-label="Default select example">
                                     <option value="1">Admin</option>
                                     <option value="2">Customer</option>
+                                    <option value="3">Shipper</option>
                                 </select>
                             </div>
 

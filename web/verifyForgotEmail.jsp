@@ -42,12 +42,12 @@
             
             <div class="container">
                 <div class="signup-content">
-                    <form action="forgotPasswordController" method="POST" id="signup-form" class="signup-form">
+                    <form action="forgotPasswordController" id="signup-form" class="signup-form">
                         <input type="hidden" name="forgotPasswordCustomer" id="forgotPasswordCustomer" value="${sessionScope.forgotPasswordCustomer}"/>
-                        <input type="text" name="code" id="code" value="<%= codeB %>">
+                        <input type="hidden" name="code" id="code" value="<%= codeB %>">
                         <h2 class="form-title">Verify your Email</h2>
                         <h3 class="form-title">Your Verification Code Has Been Sent To Your E-mail</h3>
-                        <h3 class="form-title">It will expire in 60 seconds</h3>
+                        <h3 id="countdownMessage" class="form-title">It will expire in <span id="countdown">180s</span> seconds</h3>
                         <p class="text-danger" style="font-size: 20px;">
                         ${message}
                         </p>  
@@ -78,4 +78,21 @@
     var currentTime = Date.now();
     return currentTime > expiryTime;
   }
+  var seconds = 180; // Total countdown time in seconds
+        var countdownElement = document.getElementById("countdown");
+        var countdownMessage = document.getElementById("countdownMessage");
+        function countdown() {
+            if (seconds < 0) {
+                // Countdown is over
+                countdownMessage.innerHTML = "Your verification code has expired!";
+            } else {
+                // Display the countdown
+                countdownElement.innerHTML = seconds + "s";
+            }
+
+            seconds--; // Decrease the countdown time by 1 second
+        }
+
+        // Call the countdown function every second
+        setInterval(countdown, 1000);
 </script>

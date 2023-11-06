@@ -322,7 +322,7 @@ public class validation {
         // Convert the codeBuilder to a string and return the verification code
         return codeBuilder.toString();
     }
-    static long expiryTime = Instant.now().plusSeconds(60).toEpochMilli();
+    static long expiryTime = Instant.now().plusSeconds(180).toEpochMilli();
     public static boolean isCodeExpired() {
         long currentTime = Instant.now().toEpochMilli();
         return currentTime > expiryTime;

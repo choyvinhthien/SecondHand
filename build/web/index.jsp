@@ -24,7 +24,6 @@
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
         <meta content="Free HTML Templates" name="keywords">
         <meta content="Free HTML Templates" name="description">
-
         <link href="img/favicon.ico" rel="icon">
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet"> 
@@ -132,14 +131,15 @@
                                 </div>
                             </div>
                             -->
-
+                            <c:if test="${sessionScope.user.getRole() == '2' || sessionScope.user == null}">
                             <ul class="navbar-nav w-100 overflow-hidden" style="height: 410px">
                                 <c:forEach items="${sessionScope.listCC}" var="o">
                                     <li class="nav-item">
-                                        <a href="category?cid=${o.categoryId}" class="nav-link">${o.name}</a>
+                                        <a href="CategoryController?cid=${o.categoryId}" class="nav-link">${o.name}</a>
                                     </li>
                                 </c:forEach>
-                            </ul>      
+                            </ul>
+                            </c:if>
                         </div>
                     </nav>
                 </div>
@@ -153,18 +153,16 @@
                         </button>
                         <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                             <div class="navbar-nav mr-auto py-0">
+                                <c:if test="${sessionScope.user.getRole() == '2' || sessionScope.user == null}">
                                 <a href="index.jsp" class="nav-item nav-link active">Home</a>
                                 <a href="shopController" class="nav-item nav-link">Shop</a>
+                                </c:if>
                                 <c:if test="${sessionScope.user != null}">
-                                <div class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
-                                    <div class="dropdown-menu rounded-0 m-0">
-                                        <a href="cart.jsp" class="dropdown-item">Shopping Cart</a>
-                                        <a href="checkout.jsp" class="dropdown-item">Checkout</a>
-                                    </div>
-                                </div>
-                                    <a href="./productManagerController" class="nav-item nav-link">Product Manager</a>
                                     <c:if test="${sessionScope.user.getRole() == '2'}">
+                                        <a href="cart.jsp" class="nav-item nav-link">Shopping Cart</a>
+                                    <a href="./productManagerController" class="nav-item nav-link">Product Manager</a>
+                                    </c:if>
+                                    <c:if test="${sessionScope.user.getRole() == '2' || sessionScope.user.getRole() == '3'}">
                                         <a href="./OrderManagerController" class="nav-item nav-link">Order Manager</a>
                                     </c:if>
                                     <a href="./MessengerManagerController" class="nav-item nav-link">Messenger</a>
@@ -179,7 +177,7 @@
                             </c:if>
                             
                             <c:if test="${sessionScope.user.getRole() == '2'}">
-                                    <a href="addProduct.jsp" class="nav-item nav-link">Post For Sale</a>
+                                    <a href="productManagerController" class="nav-item nav-link">Post For Sale</a>
                             </c:if>
                                     
                             <c:if test="${sessionScope.user.getRole() == '1'}">
@@ -189,17 +187,22 @@
                                         <a href="AccountManagerController" class="dropdown-item">Accounts</a>
                                         <a href="CategoryManagerController" class="dropdown-item">Categories</a>
                                         <a href="productManagerController" class="dropdown-item">Products</a>
+                                        <a href="DiscountManagerController" class="dropdown-item">Discounts</a>
                                         </div>
                                     </div>
                                 </c:if>
 
                             <c:if test="${sessionScope.user != null}">
                         <div class="nav-item dropdown">
-                            <c:if test="${sessionScope.user.getRole() == '2'}">
+                            <c:if test="${sessionScope.user.getRole() == '2'|| sessionScope.user.getRole() == '3'}">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">${sessionScope.user.getName()}</a>
                                 <div class="dropdown-menu rounded-0 m-0">
-                                <c:if test="${sessionScope.isEmail==false}">
                                     <a href="profileController" class="dropdown-item">Profile</a>
+                                    <c:if test="${sessionScope.user.getRole() == '2'}">
+                                        <a href="OrderForSellerController" class="dropdown-item">Shop's Orders</a>
+                                    </c:if>
+                                    <c:if test="${sessionScope.user.getRole() == '3'}">
+                                        <a href="OrderForShipperController" class="dropdown-item">Shipper's Orders</a>
                                     </c:if>
                             </c:if>
                             <c:if test="${sessionScope.user.getRole() == '1'}">
@@ -314,7 +317,7 @@
                 <c:forEach items="${listRandomC}" var="o">
                     <div class="col-lg-4 col-md-6 pb-1">
                         <div class="cat-item d-flex flex-column border mb-4 img-category" style="padding: 30px;">
-                            <a href="category?cid=${o.category_id}" class="cat-img position-relative overflow-hidden mb-3">
+                            <a href="CategoryController?cid=${o.category_id}" class="cat-img position-relative overflow-hidden mb-3">
                                 <img class="img-fluid" src="${o.img}" alt="">
                             </a>
                             <h5 class="font-weight-semi-bold m-0 text-center">${o.cname}</h5>

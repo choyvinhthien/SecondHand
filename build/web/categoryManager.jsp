@@ -74,7 +74,7 @@
                             <h2>Manage <b>Categories</b></h2>
                         </div>
                         <div class="col-lg-5 col-5 text-left">
-                            <form action="CategoryManagerController" method="Post">
+                            <form action="CategoryManagerController" method="get">
                                 <div class="input-group">
                                     <input name="search" id="input-search" type="text" class="form-control" placeholder="Search for Categories" value = "<%= search %>">
                                     <button type="submit" name="action" value="search" class="btn btn-outline-primary d-flex align-items-center" style="border: none; background: none;">
@@ -107,7 +107,6 @@
                                         <form action="AccountManagerController" method="POST" id="signup-form" class="btn">
                                         <input type="hidden" name="category_id" id="category_id" value="${item.getCategoryId()}"/>
                                         <div>
-                                        <button type="submit" name="action" value="detail" class="btn btn-primary"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></button>
                                         <button type="submit" name="action" value="delete" class="btn btn-primary" onclick="return confirm('Are you sure to delete category ${item.getName()}?')"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></button>
                                     </div>
                                 </form></td>
@@ -119,7 +118,7 @@
                     <div class="hint-text">Page <b>${tag}</b></div>
                     <ul class="pagination">
                         <c:forEach begin="1" end="${endPage}" var="i">
-                            <li class="page-item ${tag==i? "acvive" : "" }"><a href="CategoryManagerController?index=${i}" class="page-link">${i}</a></li>
+                            <li class="page-item ${tag==i? "acvive" : "" }"><a href="CategoryManagerController?index=${i}&search=<%= search %>" class="page-link">${i}</a></li>
                         </c:forEach>
                     </ul>
                 </div>

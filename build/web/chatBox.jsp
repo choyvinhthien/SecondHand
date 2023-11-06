@@ -55,17 +55,21 @@
                 <div class="card col-lg-12">
                     <div class="card-body d-flex flex-column justify-content-between" style="height: 50vh;">
                         <div id="chat-area">
-                            <c:forEach items="${sessionScope.chatList}" var="mess">
+                            <c:forEach items="${chatList}" var="mess">
+                                <input type="hidden" name="roomId" value="${mess.chatroom.getRoomId()}">
                                 <div class="message-container">
                                     <span class="message-sender">${mess.senderName}:</span>
                                     <div class="message-content">${mess.content}</div>
                                 </div>
                             </c:forEach>
                         </div>
+                        <form action="addMessage">
                         <div id="input" class="mb-2 d-flex justify-content-center align-items-center">
-                            <input class="border-right border-5 rounded" id="message-input" type="text" placeholder="Enter message....">
-                            <button class="border-5 rounded" id="send-message">Send</button>
+                                <input type="hidden" name="room_id" value="${room_id}">
+                                <input name="message-input" class="border-right border-5 rounded" id="message-input" type="text" placeholder="Enter message....">
+                                <input type="submit" class="border-5 rounded" id="send-message" value="Send">
                         </div>
+                        </form>
                     </div>
                 </div>
             </div>

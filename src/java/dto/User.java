@@ -4,6 +4,7 @@
  */
 package dto;
 
+import DAO.DAO;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -129,6 +130,41 @@ public class User {
                 || user.getUsername().toLowerCase().contains(searchString)
                 || user.getName().toLowerCase().contains(searchString)
                 || user.getEmail().toLowerCase().contains(searchString);
+    }
+    public int countProducts(){
+        int count;
+        DAO dao = new DAO();
+        if("1".equals(this.role)){
+            List<Product> products = dao.getAllProducts();
+            count = products.size();
+            return count;
+        }else{
+            List<Product> products = dao.getProductByUserID(userId);
+            count = products.size();
+            return count;
+        }
+    }
+    public int countCustomers(){
+        int count;
+        DAO dao = new DAO();
+        if("1".equals(this.role)){
+            List<User> customers = dao.getAllCustomers();
+            count = customers.size();
+            return count;
+        }else{
+            return 0;
+        }
+    }
+    public int countShippers(){
+        int count;
+        DAO dao = new DAO();
+        if("1".equals(this.role)){
+            List<User> shippers = dao.getAllShippers();
+            count = shippers.size();
+            return count;
+        }else{
+            return 0;
+        }
     }
 
     @Override

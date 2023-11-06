@@ -47,7 +47,7 @@
             </select>
         </div>
         <div id="status-error"></div>
-        <form action="OrderDetailController">
+        <form action="OrderManagerController" method="POST">
             <table>
                 <thead>
                     <tr>
@@ -58,18 +58,42 @@
                         <th>Payment Method</th>
                         <th>Status</th>
                         <th>Detail</th>
+                        <c:if test="${sessionScope.user.getRole() == '3'}">
+                            <th>Action</th>
+                        </c:if>
                     </tr>
                 </thead>
                 <tbody id="table-body">
                     <c:forEach items="${sessionScope.orderList}" var="item">
                         <tr>
                             <td>${item.getOrderId()}</td>
-                            <td>${item.getCustomerId().getCustomerId()}</td>
+                            <td>${item.getCustomer().getUserId()}</td>
                             <td>${item.getOrderDate()}</td>
                             <td>${item.getTotalAmount()}</td>
-                            <td>${item.getPaymentMethod()}</td>
-                            <td>${item.getStatus()}</td>
-                            <td><button name="view" id="view" value="${item.getOrderId()}">View Detail</button></td>
+                            <!--Payment Method-->
+                            <c:if test="${item.getPaymentMethod() == '1'}">
+                                <td class="align-middle">Pay in cash</td>
+                            </c:if>
+                            <!--///////////////-->
+                            <!--Status-->
+                            <c:if test="${item.getStatus() == '1'}">
+                                <td class="align-middle">Waiting for Confirmation</td>
+                            </c:if>
+                            <c:if test="${item.getStatus() == '2'}">
+                                <td class="align-middle">Waiting for Shipper</td>
+                            </c:if>
+                            <c:if test="${item.getStatus() == '3'}">
+                                <td class="align-middle">Waiting for Delivery</td>
+                            </c:if>
+                            <c:if test="${item.getStatus() == '4'}">
+                                <td class="align-middle">Finished</td>
+                            </c:if>
+                            <!--///////////////-->
+                            <input type="hidden" name="order_id" value="${item.orderId}">
+                            <td><a href="OrderDetail?order_id=${item.orderId}" class="btn btn-primary" name="submit" id="view" value="view">View Detail</a></td>
+                            <c:if test="${sessionScope.user.getRole() == '3' && item.getStatus() == '2'}">
+                            <td><button name="submit" id="view" value="accept">Accept</button</td>
+                            </c:if>
                         </tr>
                     </c:forEach> 
                 </tbody>

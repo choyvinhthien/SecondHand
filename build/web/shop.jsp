@@ -6,7 +6,8 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
+<%@ page import="java.util.Base64" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 
 <!DOCTYPE html>
@@ -114,7 +115,7 @@
                     <div class="row pb-3">
                         <div class="col-12 pb-1">
                             <div class="d-flex align-items-center justify-content-between mb-4">
-                                <form action="SearchController" method="GET">
+                                <form action="productManagerController" method="GET">
                                     <div class="input-group">
                                         <input name="search" id="input-search" type="text" class="form-control" placeholder="Search for products">
                                         <button class="btn btn-outline-primary d-flex align-items-center" style="border: none; background: none;">
@@ -143,23 +144,25 @@
                             <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                                 <div class="card product-item border-0 mb-4">
                                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                                        <img class="img-fluid w-100" src="${o.img}" alt="">
+                                        <img class="img-fluid w-100" src="data:image/jpeg;base64,${o.images[0].getImg()}" alt="">
                                     </div>
                                     <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                                        <h6 class="text-truncate mb-3">${o.name}</h6>
+                                        <h5 class="text-truncate mb-3">${o.name}</h5>
                                         <div class="d-flex justify-content-center">
-                                            <h6>$${o.new_price}.00</h6><h6 class="text-muted ml-2"><del>$${o.old_price}.00</del></h6>
+                                            <h6>$${o.price}</h6>
+                                        </div>
+                                        <div class="d-flex justify-content-center">
+                                            <a href="ShopDetailController?uid=${o.user.userId}" class="btn btn-sm text-dark p-0"><h6>${o.user.username}</h6></a>
                                         </div>
                                     </div>
                                     <div class="card-footer d-flex justify-content-between bg-light border">
-                                        <a href="detail?pid=${o.product_id}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-                                        <button id="addToCart" onclick="addToCart(${o.product_id})" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</button>
+                                        <a href="DetailProductController?pid=${o.productId}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
+                                        <a href="addtoCart?pid=${o.productId}" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
                                     </div>
                                 </div>
                             </div> 
                         </c:forEach> 
 
-                        <div  id="addCartStatus" class="col-12 text-center" style="color: red;"> </div>
 
 
                         <div class="col-12 pb-1">
@@ -192,7 +195,6 @@
                         </div>
 
                     </div>
-                    <div  id="addCartStatus" class="col-12 text-center" style="color: red;"> </div>
                 </div>
                 <!-- Shop Product End -->
             </div>

@@ -29,10 +29,6 @@
         <servlet-class>Controller.OrderDirectController</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>OrderManagerController</servlet-name>
-        <servlet-class>Controller.OrderManagerController</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>OrderDetailController</servlet-name>
         <servlet-class>Controller.OrderDetailController</servlet-class>
     </servlet>
@@ -51,10 +47,6 @@
     <servlet>
         <servlet-name>OrderManagerSortFilterController</servlet-name>
         <servlet-class>Controller.OrderManagerSortFilterController</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>MessengerManagerController</servlet-name>
-        <servlet-class>Controller.MessengerManagerController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>openChatRoomController</servlet-name>
@@ -83,6 +75,15 @@
     <servlet>
         <servlet-name>AddNewProductController</servlet-name>
         <servlet-class>Controller.AddNewProductController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>addProduct</servlet-name>
+        <servlet-class>Controller.addProduct</servlet-class>
+        <multipart-config>
+            <max-file-size>5242880</max-file-size>
+            <max-request-size>20971520</max-request-size>
+            <location>/org</location>
+        </multipart-config>
     </servlet>
     <servlet>
         <servlet-name>ProductManagerController</servlet-name>
@@ -115,12 +116,6 @@
     <servlet>
         <servlet-name>productManagerController</servlet-name>
         <servlet-class>Controller.productManagerController</servlet-class>
-        <multipart-config>
-        <location>img</location>
-        <max-file-size>10485760</max-file-size>
-        <max-request-size>20971520</max-request-size>
-        <file-size-threshold>0</file-size-threshold>
-    </multipart-config>
     </servlet>
     <servlet>
         <servlet-name>AccountManagerController</servlet-name>
@@ -134,9 +129,116 @@
         <servlet-name>HomeController</servlet-name>
         <servlet-class>Controller.HomeController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>shopController</servlet-name>
+        <servlet-class>Controller.shopController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DetailProductController</servlet-name>
+        <servlet-class>Controller.DetailProductController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>productManagerController_1</servlet-name>
+        <servlet-class>Controller.productManagerController_1</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>addtoCart</servlet-name>
+        <servlet-class>Controller.addtoCart</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>updateQuantity</servlet-name>
+        <servlet-class>Controller.updateQuantity</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>OrderManagerController</servlet-name>
+        <servlet-class>Controller.OrderManagerController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>OrderForSellerController</servlet-name>
+        <servlet-class>Controller.OrderForSellerController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>OrderDetail</servlet-name>
+        <servlet-class>Controller.OrderDetail</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DiscountManagerController</servlet-name>
+        <servlet-class>Controller.DiscountManagerController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RatingController</servlet-name>
+        <servlet-class>Controller.RatingController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddReviews</servlet-name>
+        <servlet-class>Controller.AddReviews</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>MessengerManagerController</servlet-name>
+        <servlet-class>Controller.MessengerManagerController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>addMessage</servlet-name>
+        <servlet-class>Controller.addMessage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>chatBoxManager</servlet-name>
+        <servlet-class>Controller.chatBoxManager</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>OrderForShipperController</servlet-name>
+        <servlet-class>Controller.OrderForShipperController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>addProductManager</servlet-name>
+        <servlet-class>Controller.addProductManager</servlet-class>
+        <multipart-config>
+            <max-file-size>5242880</max-file-size>
+            <max-request-size>20971520</max-request-size>
+            <location>/org</location>
+        </multipart-config>
+    </servlet>
+    <servlet>
+        <servlet-name>addProductController</servlet-name>
+        <servlet-class>Controller.addProductController</servlet-class>
+        <multipart-config>
+            <max-file-size>5242880</max-file-size>
+            <max-request-size>20971520</max-request-size>
+            <location>/org</location>
+        </multipart-config>
+    </servlet>
+    <servlet>
+        <servlet-name>ShopDetailController</servlet-name>
+        <servlet-class>Controller.ShopDetailController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CategoryController</servlet-name>
+        <servlet-class>Controller.CategoryController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ShoppingCartController</servlet-name>
+        <servlet-class>Controller.ShoppingCartController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>shipperConfirmController</servlet-name>
+        <servlet-class>Controller.shipperConfirmController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DashboardController</servlet-name>
+        <servlet-class>Controller.DashboardController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AddToCartController</servlet-name>
         <url-pattern>/AddToCartController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>addProduct</servlet-name>
+        <url-pattern>/addProduct</url-pattern>
+        <multipart-config>
+            <max-file-size>5242880</max-file-size>
+            <max-request-size>20971520</max-request-size>
+            <location>/org</location>
+        </multipart-config>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
@@ -163,10 +265,6 @@
         <url-pattern>/OrderDirectController</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>OrderManagerController</servlet-name>
-        <url-pattern>/OrderManagerController</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>OrderDetailController</servlet-name>
         <url-pattern>/OrderDetailController</url-pattern>
     </servlet-mapping>
@@ -185,10 +283,6 @@
     <servlet-mapping>
         <servlet-name>OrderManagerSortFilterController</servlet-name>
         <url-pattern>/OrderManagerSortFilterController</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>MessengerManagerController</servlet-name>
-        <url-pattern>/MessengerManagerController</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>openChatRoomController</servlet-name>
@@ -258,11 +352,11 @@
         <servlet-name>productManagerController</servlet-name>
         <url-pattern>/productManagerController</url-pattern>
         <multipart-config>
-        <location>/img</location>
-        <max-file-size>10485760</max-file-size>
-        <max-request-size>20971520</max-request-size>
-        <file-size-threshold>0</file-size-threshold>
-    </multipart-config>
+            <location>/org</location>
+            <max-file-size>10485760</max-file-size>
+            <max-request-size>20971520</max-request-size>
+            <file-size-threshold>0</file-size-threshold>
+        </multipart-config>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AccountManagerController</servlet-name>
@@ -276,15 +370,125 @@
         <servlet-name>HomeController</servlet-name>
         <url-pattern>/HomeController</url-pattern>
     </servlet-mapping>
-    <multipart-config>
-        <location>img</location>
-        <max-file-size>10485760</max-file-size>
-        <max-request-size>20971520</max-request-size>
-        <file-size-threshold>0</file-size-threshold>
-    </multipart-config>
+    <servlet-mapping>
+        <servlet-name>shopController</servlet-name>
+        <url-pattern>/shopController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DetailProductController</servlet-name>
+        <url-pattern>/DetailProductController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>productManagerController_1</servlet-name>
+        <url-pattern>/productManagerController_1</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>addtoCart</servlet-name>
+        <url-pattern>/addtoCart</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>updateQuantity</servlet-name>
+        <url-pattern>/updateQuantity</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OrderManagerController</servlet-name>
+        <url-pattern>/OrderManagerController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OrderForSellerController</servlet-name>
+        <url-pattern>/OrderForSellerController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OrderDetail</servlet-name>
+        <url-pattern>/OrderDetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DiscountManagerController</servlet-name>
+        <url-pattern>/DiscountManagerController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RatingController</servlet-name>
+        <url-pattern>/RatingController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddReviews</servlet-name>
+        <url-pattern>/AddReviews</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MessengerManagerController</servlet-name>
+        <url-pattern>/MessengerManagerController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>addMessage</servlet-name>
+        <url-pattern>/addMessage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>chatBoxManager</servlet-name>
+        <url-pattern>/chatBoxManager</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OrderForShipperController</servlet-name>
+        <url-pattern>/OrderForShipperController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>addProductManager</servlet-name>
+        <url-pattern>/addProductManager</url-pattern>
+        <multipart-config>
+            <max-file-size>5242880</max-file-size>
+            <max-request-size>20971520</max-request-size>
+            <location>/org</location>
+        </multipart-config>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>addProductController</servlet-name>
+        <url-pattern>/addProductController</url-pattern>
+        <multipart-config>
+            <max-file-size>5242880</max-file-size>
+            <max-request-size>20971520</max-request-size>
+            <location>/org</location>
+        </multipart-config>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShopDetailController</servlet-name>
+        <url-pattern>/ShopDetailController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CategoryController</servlet-name>
+        <url-pattern>/CategoryController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShoppingCartController</servlet-name>
+        <url-pattern>/ShoppingCartController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>shipperConfirmController</servlet-name>
+        <url-pattern>/shipperConfirmController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DashboardController</servlet-name>
+        <url-pattern>/DashboardController</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             3600
         </session-timeout>
     </session-config>
+    <multipart-config>
+        <max-file-size>5242880</max-file-size>
+        <max-request-size>20971520</max-request-size>
+        <location>/org</location>
+        <file-size-threshold>0</file-size-threshold>
+    </multipart-config>
+    <multipart-config>
+        <max-file-size>5242880</max-file-size>
+        <max-request-size>20971520</max-request-size>
+        <location>/org</location>
+    </multipart-config>
+    <web-app>
+        <multipart-config>
+            <max-file-size>5242880</max-file-size>
+            <max-request-size>20971520</max-request-size>
+            <location>/org</location>
+        </multipart-config>
+    </web-app>
 </web-app>

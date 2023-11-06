@@ -30,6 +30,7 @@ public class Chatroom {
     private int roomId;
     private User user1;
     private User user2;
+    private List<Message> messages;
     
     public Chatroom() {
     }
@@ -38,6 +39,20 @@ public class Chatroom {
         this.user1 = user1;
         this.user2 = user2;
     }
+
+    public Chatroom(int roomId, User user1, User user2) {
+        this.roomId = roomId;
+        this.user1 = user1;
+        this.user2 = user2;
+    }
+
+    public Chatroom(int roomId, User user1, User user2, List<Message> messages) {
+        this.roomId = roomId;
+        this.user1 = user1;
+        this.user2 = user2;
+        this.messages = messages;
+    }
+    
 
     public int getRoomId() {
         return roomId;
@@ -62,6 +77,15 @@ public class Chatroom {
     public void setUser2(User user2) {
         this.user2 = user2;
     }
+
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
+    }
+    
 
     @Override
     public String toString() {

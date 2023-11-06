@@ -5,6 +5,8 @@
 package dto;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Product {
     private int productId;
@@ -15,11 +17,14 @@ public class Product {
     private int quantitySold;
     private Category category;
     private User user;
+    private String status;
+    private List<Image> images;
+    private List<Review> reviews;
     
     public Product() {
     }
 
-    public Product(int productId, String name, BigDecimal price, int quantity, String description, int quantitySold, Category category, User user) {
+    public Product(int productId, String name, BigDecimal price, int quantity, String description, int quantitySold, Category category, User user, String status, List<Image> images) {
         this.productId = productId;
         this.name = name;
         this.price = price;
@@ -28,9 +33,12 @@ public class Product {
         this.quantitySold = quantitySold;
         this.category = category;
         this.user = user;
+        this.status = status;
+        this.images = images;
     }
-    
-    public Product(String name, BigDecimal price, int quantity, String description,int quantitySold, Category category, User user) {
+
+    public Product(int productId, String name, BigDecimal price, int quantity, String description, int quantitySold, Category category, User user, String status) {
+        this.productId = productId;
         this.name = name;
         this.price = price;
         this.quantity = quantity;
@@ -38,7 +46,28 @@ public class Product {
         this.quantitySold = quantitySold;
         this.category = category;
         this.user = user;
+        this.status = status;
     }
+
+    public Product(String name, BigDecimal price, int quantity, String description, int quantitySold, Category category, User user, String status) {
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+        this.description = description;
+        this.quantitySold = quantitySold;
+        this.category = category;
+        this.user = user;
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    
 
     public int getProductId() {
         return productId;
@@ -103,10 +132,58 @@ public class Product {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
     
+    public List<Product> findProductsByString(List<Product> productList, String searchString) {
+
+        List<Product> matchingProducts = new ArrayList<>();
+
+        // Convert the search string to lowercase for case-insensitive search
+        String lowerSearchString = searchString.toLowerCase();
+
+        for (Product product : productList) {
+            if (containsString(product, lowerSearchString)) {
+                matchingProducts.add(product);
+            }
+        }
+
+        return matchingProducts;
+    }
+    public boolean containsString(Product product, String searchString) {
+        return String.valueOf(product.getProductId()).contains(searchString)
+                || product.getName().toLowerCase().contains(searchString);
+    }
+    public int countReviews(){
+        return reviews.size();
+    }
+    public float averageReviews(){
+        float a = 0;
+        for(Review review : reviews){
+            a += review.getRating();
+        }
+        a = a/reviews.size();
+        return a;
+    }
+
     @Override
     public String toString() {
-        return "dto.Product[ productId=" + productId + " ]";
+        return "Product{" + "productId=" + productId + ", name=" + name + ", price=" + price + ", quantity=" + quantity + ", description=" + description + ", quantitySold=" + quantitySold + ", category=" + category + ", user=" + user + ", images=" + images + '}';
     }
+    
     
 }

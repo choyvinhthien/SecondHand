@@ -8,8 +8,15 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="css/login.css">
         <style>
-    
-</style>
+            #user::after {
+                content: '*';
+                color: red;
+              }
+            #password-field::after {
+                content: '*';
+                color: red;
+              }
+        </style>
 
  
     </head>
@@ -34,7 +41,7 @@
                         
 		      	<form action="login" method="POST" class="signin-form">
                                 <div class="form-group">
-                                        <input name ="user" type="text" class="form-control" placeholder="Username/E-mail" required>
+                                        <input id="user" name ="user" type="text" class="form-control" placeholder="Username/E-mail" required>
                                 </div>
 	            <div class="form-group">
 	              <input name="pass" id="password-field" type="password" class="form-control" placeholder="Password" required>
@@ -55,9 +62,12 @@
 								</div>
 	            </div>
 	          </form>
+                  <p class="signuphere">
+                        Do not have an account ? <a href="Register.jsp" class="signuphere-link">Sign-up here</a>
+                    </p>
 	          <p class="w-100 text-center">&mdash; Or Sign In With &mdash;</p>
 	          <div class="social d-flex text-center">
-	          	<a href="https://accounts.google.com/o/oauth2/auth?scope=email&redirect_uri=http://localhost:8080/SecondHandClothesShop/LoginGoogleHandler&response_type=code&client_id=307569771183-0earpio630bpk27htd69e65rk9f5id33.apps.googleusercontent.com&approval_prompt=force" class="px-2 py-2 ml-md-1 rounded"><span class="ion-logo-gmail mr-2"></span> Google</a>
+	          	<a href="https://accounts.google.com/o/oauth2/auth?scope=email&redirect_uri=http://localhost:8080/SecondHandClothesPlatform/LoginGoogleHandler&response_type=code&client_id=307569771183-0earpio630bpk27htd69e65rk9f5id33.apps.googleusercontent.com&approval_prompt=force" class="px-2 py-2 ml-md-1 rounded"><span class="ion-logo-gmail mr-2"></span> Google</a>
 	          </div>
 		      </div>
 				</div>

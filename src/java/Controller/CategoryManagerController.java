@@ -35,12 +35,27 @@ public class CategoryManagerController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        String indexPage = request.getParameter("index");
+        String search = request.getParameter("search");
+        if(indexPage==null){
+            indexPage = "1";
+        }
+        int index = Integer.parseInt(indexPage);
         HttpSession session = request.getSession();
-        User c = (User) session.getAttribute("user");
-        int id = c.getUserId();
         DAO dao = new DAO();
-        List<Category> listC = dao.getAllCategories();
-        session.setAttribute("slistCC", listC);
+        Category category = new Category();
+        int count = dao.getTotal("category");
+        int endPage = count/10;
+        if(count%10!=0) endPage++;
+        List<Category> categoryList = dao.pagingCategories(index);
+        if(search!=null){
+            categoryList = category.findCategoriesByString(categoryList,search);
+        }
+        session.setAttribute("slistCC", categoryList);
+        session.setAttribute("search", search);
+        session.setAttribute("slistCC", categoryList);
+        request.setAttribute("endPage", endPage);
+        request.setAttribute("tag", index);
         request.getRequestDispatcher("categoryManager.jsp").forward(request, response);
     }
 
@@ -73,8 +88,7 @@ public class CategoryManagerController extends HttpServlet {
         DAO dao = new DAO();
         Category category = new Category();
         HttpSession session=request.getSession();
-        String action = request.getParameter("action");
-        switch (action) {
+        switch (request.getParameter("action")) {
             case "detail":
                 
                 break;

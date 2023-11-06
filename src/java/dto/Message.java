@@ -25,6 +25,16 @@ public class Message {
         this.chatroom = chatroom;
     }
 
+    public Message(int messageId, int senderId, String senderName, String content, Date timestamp, Chatroom chatroom) {
+        this.messageId = messageId;
+        this.senderId = senderId;
+        this.senderName = senderName;
+        this.content = content;
+        this.timestamp = timestamp;
+        this.chatroom = chatroom;
+    }
+    
+
     public int getMessageId() {
         return messageId;
     }

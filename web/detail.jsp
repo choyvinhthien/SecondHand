@@ -4,6 +4,8 @@
     Author     : Raiku
 --%>
 
+<%@page import="dto.Image"%>
+<%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
@@ -32,6 +34,12 @@
                 height: auto;
                 max-height: 100%;
             }
+            .centered-image {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                /* Add any additional styles as needed */
+            }
         </style>    
         <link rel="stylesheet" href="css/ratingstar.css"/>
         <link href="css/style.css" rel="stylesheet">
@@ -39,177 +47,16 @@
     </head>
 
     <body>
-        <!-- Topbar Start -->
-        <div class="container-fluid">
-            <div class="row bg-secondary py-2 px-xl-5">
-                <div class="col-lg-6 d-none d-lg-block">
-                    <div class="d-inline-flex align-items-center">
-                        <a class="text-dark" href="FAQs.jsp">FAQs</a>
-                        <span class="text-muted px-2">|</span>
-                        <a class="text-dark" href="">Help</a>
-                        <span class="text-muted px-2">|</span>
-                        <a class="text-dark" href="">Support</a>
-                    </div>
-                </div>
-                <!-- FAQs -->
-                <div class="col-lg-6 text-center text-lg-right">
-                    <div class="d-inline-flex align-items-center">
-                        <a class="text-dark px-2" href="">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a class="text-dark px-2" href="">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a class="text-dark px-2" href="">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a class="text-dark px-2" href="">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a class="text-dark pl-2" href="">
-                            <i class="fab fa-youtube"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="row align-items-center py-3 px-xl-5">
-                <div class="col-lg-3 d-none d-lg-block">
-                    <a href="" class="text-decoration-none">
-                        <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border px-3 mr-1">F</span>Fashion</h1>
-                    </a>
-                </div>
-                <div class="col-lg-6 col-6 text-left">
-                    <form action="SearchController" method="GET">
-                        <div class="input-group">
-                            <input name="search" id="input-search" type="text" class="form-control" placeholder="Search for products">
-                            <button class="btn btn-outline-primary d-flex align-items-center" style="border: none; background: none;">
-                                <span class="input-group-text bg-transparent text-primary">
-                                    <i class="fa fa-search"></i>
-                                </span>
-                            </button>
-                        </div>
-
-                    </form>
-                </div>
-                <div class="col-lg-3 col-6 text-right">
-                    <a href="./cart.jsp" class="btn border">
-                        <i class="fas fa-shopping-cart text-primary"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <!-- Topbar End -->
-
-
-        <!-- Navbar Start -->
-        <div class="container-fluid">
-            <div class="row border-top px-xl-5">
-                <div class="col-lg-3 d-none d-lg-block">
-                    <!--
-                    <a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100" data-toggle="collapse" href="#navbar-vertical" style="height: 65px; margin-top: -1px; padding: 0 30px;">
-                        <h6 class="m-0">Categories</h6>
-                        <i class="fa fa-angle-down text-dark"></i>
-                    </a>
-                    <nav class="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0 bg-light" id="navbar-vertical" style="width: calc(100% - 30px); z-index: 1;">
-                        <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link" data-toggle="dropdown">Dresses <i class="fa fa-angle-down float-right mt-1"></i></a>
-                                <div class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
-                                    <a href="" class="dropdown-item">Men's Dresses</a>
-                                    <a href="" class="dropdown-item">Women's Dresses</a>
-                                    <a href="" class="dropdown-item">Baby's Dresses</a>
-                                </div>
-                            </div>
-                            <a href="" class="nav-item nav-link">Shirts</a>
-                            <a href="" class="nav-item nav-link">Jeans</a>
-                            <a href="" class="nav-item nav-link">Swimwear</a>
-                            <a href="" class="nav-item nav-link">Sleepwear</a>
-                            <a href="" class="nav-item nav-link">Sportswear</a>
-                            <a href="" class="nav-item nav-link">Jumpsuits</a>
-                            <a href="" class="nav-item nav-link">Blazers</a>
-                            <a href="" class="nav-item nav-link">Jackets</a>
-                            <a href="" class="nav-item nav-link">Shoes</a>
-                        </div>
-                    </nav>
-                    -->
-
-                    <a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100" data-toggle="collapse" href="#navbar-vertical" style="height: 65px; margin-top: -1px; padding: 0 30px;">
-                        <h6 class="m-0">Categories</h6>
-                        <i class="fa fa-angle-down text-dark"></i>
-                    </a>
-
-                    <nav class="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0 bg-light" id="navbar-vertical" style="width: calc(100% - 30px); z-index: 1;">
-                        <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
-                            <!-- Load all categories to server -->
-                            <ul>
-                                <c:forEach items="${listC}" var="o">
-                                    <li class="nav-item">
-                                        <a href="category?cid=${o.category_id}" class="nav-link">${o.cname}</a>
-                                    </li>
-                                </c:forEach>
-                            </ul>
-                        </div>
-                    </nav>
-
-                </div>
-                <div class="col-lg-9">
-                    <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
-                        <a href="" class="text-decoration-none d-block d-lg-none">
-                            <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border px-3 mr-1">E</span>Shopper</h1>
-                        </a>
-                        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                            <div class="navbar-nav mr-auto py-0">
-                                <a href="home" class="nav-item nav-link">Home</a>
-                                <a href="shop" class="nav-item nav-link">Shop</a>
-                                <a href="detail.jsp" class="nav-item nav-link active">Shop Detail</a>
-                                <div class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
-                                    <div class="dropdown-menu rounded-0 m-0">
-                                        <a href="cart.jsp" class="dropdown-item">Shopping Cart</a>
-                                        <a href="checkout.jsp" class="dropdown-item">Checkout</a>
-                                    </div>
-                                </div>
-                                <a href="contact.jsp" class="nav-item nav-link">Contact</a>
-                                <a href="./addProduct.jsp" class="nav-item nav-link">Product Manager</a>
-                                <a href="./OrderManagerController" class="nav-item nav-link">Order Manager</a>
-                                <a href="./MessengerManagerController" class="nav-item nav-link">Messenger</a>
-                            </div>
-                            <c:if test="${sessionScope.user == null}">
-                                <div class="navbar-nav ml-auto py-0">
-                                    <a href="./loginCustomer.jsp" class="nav-item nav-link">Login</a>
-                                    <a href="Register.jsp" class="nav-item nav-link">Register</a>
-                                </div>
-                            </c:if>
-
-                            <c:if test="${sessionScope.user != null}">
-                                <c:if test="${sessionScope.userRole == 'customer'}">
-                                    <a href="#" class="nav-link dropdown-toggle" >Hello ${sessionScope.user.getCustomerName()}</a>
-                                    <a href="logout" class="nav-item nav-link">Logout</a> 
-                                </c:if>
-                                <c:if test="${sessionScope.userRole != 'customer'}">
-                                    <a href="#" class="nav-link dropdown-toggle" >Hello ${sessionScope.user.getUsername()}</a>
-                                    <a href="logout" class="nav-item nav-link">Logout</a> 
-                                </c:if>
-                            </c:if> 
-                        </div>
-                    </nav>
-                </div>
-            </div>
-        </div>
-        <!-- Navbar End -->
-
+        <%@include file="header.jsp" %>
 
         <!-- Page Header Start -->
         <div class="container-fluid bg-secondary mb-5">
             <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
-                <h1 class="font-weight-semi-bold text-uppercase mb-3">Shop Detail</h1>
+                <h1 class="font-weight-semi-bold text-uppercase mb-3">Product Detail</h1>
                 <div class="d-inline-flex">
                     <p class="m-0"><a href="">Home</a></p>
                     <p class="m-0 px-2">-</p>
-                    <p class="m-0">Shop Detail</p>
+                    <p class="m-0">Product Detail</p>
                 </div>
             </div>
         </div>
@@ -222,9 +69,28 @@
                 <div class="col-lg-5 pb-5">
                     <div id="product-carousel" class="carousel slide" data-ride="carousel">
                         <div class="carousel-inner border">
-                            <div class="carousel-item active">
-                                <img class="w-100 h-100" src="${detail.img}" alt="Image">
-                            </div>
+                            <%
+                                List<Image> images = (List<Image>)session.getAttribute("images"); // Assuming `detail.getImages()` returns the list of images
+                                for (int index = 0; index < images.size(); index++) {
+                                    Image image = images.get(index);
+
+                                    // Determine if the carousel item should be active
+                                    String activeClass = (index == 0) ? "active" : "";
+
+                                    String imageSource = image.getImg(); // Assuming `getImg()` retrieves the image source
+
+                                    // Generate the carousel item HTML code
+                                    String carouselItem = String.format(
+                                        "<div class=\"carousel-item %s\">\n" +
+                                        "    <img class=\"centered-image\" src=\"data:image/jpeg;base64,%s\" alt=\"Image\" />\n" +
+                                        "</div>",
+                                        activeClass, imageSource
+                                    );
+
+                                    // Print or do something with the carousel item
+                                    out.println(carouselItem);
+                                }
+                            %>
                             <!--
                             <div class="carousel-item">
                                 <img class="w-100 h-100" src="img/product-2.jpg" alt="Image">
@@ -258,25 +124,17 @@
                         </div>
                         <small class="pt-1">(50 Reviews)</small>
                     </div>
-                    <h3>Price: $${detail.new_price}.00</h3><h6 class="text-muted ml-2"><del>$${detail.old_price}.00</del></h6>
+                    <h3>Price: $${detail.price}</h3>
                     <p class="mb-4">Please scroll down to see more descriptions, and click "Add to cart" to order.</p>
-
+                    <form action="addtoCart">
+                        <input  type="hidden" name="pid" value="${detail.productId}">
                     <div class="d-flex align-items-center mb-4 pt-2">
                         <div class="input-group quantity mr-3" style="width: 130px;">
-                            <div class="input-group-btn">
-                                <button class="btn btn-primary btn-minus" >
-                                    <i class="fa fa-minus"></i>
-                                </button>
-                            </div>
-                            <input type="text" class="form-control bg-secondary text-center" value="1">
-                            <div class="input-group-btn">
-                                <button class="btn btn-primary btn-plus">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                            </div>
+                            <input id="cartItemQuantity" name="quantity" min="1" max="${detail.getQuantity()}"  type="number" class="form-control form-control-sm bg-secondary text-center" required>
                         </div>
-                        <button id="addToCart" onclick="addToCart(${detail.product_id})" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</button>
+                        <button type="submit" id="addToCart"  class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</button>
                     </div>
+                    </form>
                     <div class="d-flex pt-2">
                         <p class="text-dark font-weight-medium mb-0 mr-2">Share on:</p>
                         <div class="d-inline-flex">
@@ -312,23 +170,17 @@
                         </div>
                         <div class="tab-pane fade" id="tab-pane-2">
                             <h4 class="mb-3">Additional Information</h4>
-                            <p>Was distributed by Group 2 SE17B02 K17 FPTU </p>
+                            <p>Was distributed by Group 4 SE17B01 FPTU </p>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <ul class="list-group list-group-flush">
-                                        <li class="list-group-item px-0">
-                                            To Bich Phuong
-                                        </li>
-                                        <li class="list-group-item px-0">
-                                            Nguyen Cao Trung Kien
-                                        </li>
-                                        <li class="list-group-item px-0">
-                                            Phan Nguyen Xuan Hien
-                                        </li>
-                                        <li class="list-group-item px-0">
-                                            Nguyen Tan Loc
-                                        </li>
-                                    </ul> 
+                                     <div class="media mb-4">
+                                        <img src="img/user.jpg" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
+                                        <div class="media-body">
+                                            <h6>${detail.user.getUsername()}</h6>
+                                        </div>
+                                        <a href="ShopDetailController?uid=${detail.user.userId}" class="btn btn-primary">Watch Shop</a>
+                                        <a href="ShopDetailController?uid=${detail.user.userId}" class="btn btn-primary">Chat</a>
+                                    </div>
                                 </div>
 
                             </div>
@@ -352,8 +204,91 @@
                                             <p>ÐC EM EII</p>
                                         </div>
                                     </div>
+                                    <c:forEach items="${reviewList}" var="item">
+                                    <div class="media mb-4">
+                                        <img src="img/user.jpg" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
+                                        <div class="media-body">
+                                            <h6>${item.user.getUsername()}<small> - <i>${item.date}</i></small></h6>
+                                            <div class="text-primary mb-2">
+                                                <c:if test="${item.rating == 0.5}">
+                                                    <i class="fas fa-star-half-alt"></i>
+                                                    <i class="far fa-star"></i>
+                                                    <i class="far fa-star"></i>
+                                                    <i class="far fa-star"></i>
+                                                    <i class="far fa-star"></i>
+                                                </c:if>
+                                                <c:if test="${item.rating == 1}">
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="far fa-star"></i>
+                                                    <i class="far fa-star"></i>
+                                                    <i class="far fa-star"></i>
+                                                    <i class="far fa-star"></i>
+                                                </c:if>
+                                                <c:if test="${item.rating == 1.5}">
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star-half-alt"></i>
+                                                    <i class="far fa-star"></i>
+                                                    <i class="far fa-star"></i>
+                                                    <i class="far fa-star"></i>
+                                                </c:if>
+                                                <c:if test="${item.rating == 2}">
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="far fa-star"></i>
+                                                    <i class="far fa-star"></i>
+                                                    <i class="far fa-star"></i>
+                                                </c:if>
+                                                <c:if test="${item.rating == 2.5}">
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star-half-alt"></i>
+                                                    <i class="far fa-star"></i>
+                                                    <i class="far fa-star"></i>
+                                                </c:if>
+                                                <c:if test="${item.rating == 3}">
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="far fa-star"></i>
+                                                    <i class="far fa-star"></i>
+                                                </c:if>
+                                                    <c:if test="${item.rating == 3.5}">
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star-half-alt"></i>
+                                                    <i class="far fa-star"></i>
+                                                </c:if>
+                                                <c:if test="${item.rating == 4}">
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="far fa-star"></i>
+                                                </c:if>
+                                                <c:if test="${item.rating == 4.5}">
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star-half-alt"></i>
+                                                </c:if>
+                                                <c:if test="${item.rating == 5}">
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                </c:if>
+                                            </div>
+                                            <p>${item.comment}</p>
+                                        </div>
+                                    </div>
+                                    </c:forEach>
                                 </div>
                                 <div class="col-md-6">
+                                    <form action="AddReviews">
+                                        <input type="hidden" name="productId" value="${detail.productId}">
                                     <h4 class="mb-4">Leave a review</h4>
                                     <small>Your email address will not be published. Required fields are marked *</small>
                                     <div class="d-flex my-3">
@@ -362,45 +297,36 @@
                                             <input type="radio" id="star5" name="rating" value="5" />
                                             <label class = "full" for="star5" title="Awesome - 5 stars"></label>
 
-                                            <input type="radio" id="star4half" name="rating" value="4 and a half" />
+                                            <input type="radio" id="star4half" name="rating" value="4.5" />
                                             <label class="half" for="star4half" title="Pretty good - 4.5 stars"></label>
 
                                             <input type="radio" id="star4" name="rating" value="4" />
                                             <label class = "full" for="star4" title="Pretty good - 4 stars"></label>
 
-                                            <input type="radio" id="star3half" name="rating" value="3 and a half" />
+                                            <input type="radio" id="star3half" name="rating" value="3.5" />
                                             <label class="half" for="star3half" title="Meh - 3.5 stars"></label>
                                             <input type="radio" id="star3" name="rating" value="3" />
                                             <label class = "full" for="star3" title="Meh - 3 stars"></label>
 
-                                            <input type="radio" id="star2half" name="rating" value="2 and a half" />
+                                            <input type="radio" id="star2half" name="rating" value="2.5" />
                                             <label class="half" for="star2half" title="Kinda bad - 2.5 stars"></label>
 
                                             <input type="radio" id="star2" name="rating" value="2" />
                                             <label class = "full" for="star2" title="Kinda bad - 2 stars"></label>
 
-                                            <input type="radio" id="star1half" name="rating" value="1 and a half" />
+                                            <input type="radio" id="star1half" name="rating" value="1.5" />
                                             <label class="half" for="star1half" title="Meh - 1.5 stars"></label>
 
                                             <input type="radio" id="star1" name="rating" value="1" />
                                             <label class = "full" for="star1" title="Sucks big time - 1 star"></label>
 
-                                            <input type="radio" id="starhalf" name="rating" value="half" />
+                                            <input type="radio" id="starhalf" name="rating" value="0.5" />
                                             <label class="half" for="starhalf" title="Sucks big time - 0.5 stars"></label>
                                         </div>
                                     </div>
-                                    <form>
                                         <div class="form-group">
                                             <label for="message">Your Review *</label>
-                                            <textarea id="message" cols="30" rows="5" class="form-control"></textarea>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="name">Your Name *</label>
-                                            <input type="text" class="form-control" id="name">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="email">Your Email *</label>
-                                            <input type="email" class="form-control" id="email">
+                                            <textarea name="comment" id="comment" cols="30" rows="5" class="form-control"></textarea>
                                         </div>
                                         <div class="form-group mb-0">
                                             <input type="submit" value="Leave Your Review" class="btn btn-primary px-3">
@@ -428,19 +354,19 @@
                         <c:forEach items="${listRandom}" var="o">    
                             <div class="card product-item border-0">
                                 <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                                    <img class="img-fluid w-100" src="${o.img}" alt="">
+                                    <img src="data:image/jpeg;base64,${o.images[0].getImg()}" alt="Image" />
                                 </div>
 
                                 <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                                     <h6 class="text-truncate mb-3">${o.name}</h6>
                                     <div class="d-flex justify-content-center">
-                                        <h6>$${o.new_price}.00</h6><h6 class="text-muted ml-2"><del>$${o.old_price}.00</del></h6>
+                                        <h6>$${o.price}</h6>
                                     </div>
                                 </div>
 
                                 <div class="card-footer d-flex justify-content-between bg-light border">
-                                    <a href="detail?pid=${o.product_id}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-                                    <button id="addToCart" onclick="addToCart(${o.product_id})" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</button>
+                                    <a href="detail?pid=${o.productId}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
+                                    <button id="addToCart" onclick="addToCart(${o.productId})" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</button>
                                 </div>
                             </div>
 

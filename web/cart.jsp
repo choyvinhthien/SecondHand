@@ -4,11 +4,30 @@
    Author     : Raiku
 --%>
 
+<%@page import="java.math.BigDecimal"%>
+<%@page import="dto.User"%>
+<%@page import="dto.ShoppingCart"%>
+<%@page import="java.util.List"%>
+<%@page import="DAO.DAO"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
-
+<%
+// Check for success message and display alert
+    String Message =(String) session.getAttribute("Message");
+    if (Message != null) {
+    out.println("<script>");
+    out.println("alert('" + Message + "');");
+    out.println("</script>");
+    session.removeAttribute("Message");
+    }
+    DAO dao = new DAO();
+    User user = (User)session.getAttribute("user");
+    ShoppingCart shoppingCart = dao.getShoppingCartByUserID(user.getUserId());
+    session.setAttribute("ShoppingCart", shoppingCart);
+    BigDecimal totalPrice = shoppingCart.totalPrice();
+%>
     <head>
         <meta charset="utf-8">
         <title>CART FASHION</title>
@@ -55,6 +74,7 @@
                         <thead class="bg-secondary text-dark">
                             <tr>
                                 <th>Products</th>
+                                <th>Images</th>
                                 <th>Price</th>
                                 <th>Quantity</th>
                                 <th>Total</th>
@@ -63,28 +83,29 @@
                         </thead>
                         <c:set var="totalCart" scope="session" value="${0}"/>
                         <tbody id="listItemCart" class="align-middle">
-                            <c:forEach items="${sessionScope.shoppingCart.getCartItemList()}" var="item">
-                                <tr id="item" data-id="${item.getProductId().getProductId()}">
-                                    <td class="d-flex justify-content-start align-items-center"><img src="${item.getProductId().getImg()}" alt="" style="width: 50px;">${item.getProductId().getName()} </td>
-                                    <td data-id="product-price${item.getProductId().getProductId()}" class="align-middle">${item.getProductId().getPrice()}</td>
+                            <c:forEach items="${sessionScope.ShoppingCart.getCartItems()}" var="item">
+                                <tr id="item" data-id="${item.getProduct().getProductId()}">
+                                    <td class="align-middle">${item.getProduct().getName()} </td>
+                                    <td class="align-middle"><img src="data:image/jpeg;base64,${item.getProduct().images[0].getImg()}" alt="Image" style="width: 200px;"></td>
+                                    <td data-id="product-price${item.getProduct().getProductId()}" class="align-middle">${item.getProduct().getPrice()}</td>
                                     <td class="align-middle">
                                         <div class="input-group quantity mx-auto" style="width: 100px;">
                                             <div class="input-group-btn">
-                                                <button onclick="changeQuantity(${item.getProductId().getProductId()}, -1, 'button')" class="btn btn-sm btn-primary btn-minus" >
+                                                <a href="updateQuantity?action=minus&cartItemID=${item.getCartItemId()}" class="btn btn-sm btn-primary btn-minus">
                                                     <i class="fa fa-minus"></i>
-                                                </button>
+                                                </a>
                                             </div>
-                                            <input id="productQuantity" onchange="changeQuantity(${item.getProductId().getProductId()}, this.value, 'add')" type="text" class="form-control form-control-sm bg-secondary text-center" value="${item.getQuantity()}">
+                                                <input id="cartItemQuantity" name="cartItemQuantity" min="1" max="${item.getProduct().getQuantity()}"  type="text" class="form-control form-control-sm bg-secondary text-center" value="${item.getQuantity()}" disabled>
                                             <div class="input-group-btn">
-                                                <button onclick="changeQuantity(${item.getProductId().getProductId()}, 1, 'button')" class="btn btn-sm btn-primary btn-plus">
+                                                <a href="updateQuantity?action=plus&cartItemID=${item.getCartItemId()}" class="btn btn-sm btn-primary btn-plus">
                                                     <i class="fa fa-plus"></i>
-                                                </button>
+                                                </a>
                                             </div>
                                         </div>
                                     </td>
-                                    <c:set var="totalCart" scope="session" value="${totalCart + item.getProductId().getPrice()*item.getQuantity()}" />
-                                    <td data-id="totalPriceProduct${item.getProductId().getProductId()}" class="align-middle"><c:out value="${item.getProductId().getPrice()*item.getQuantity()}" /></td>
-                                    <td class="align-middle"><button id="removeProductFromCart" class="btn btn-sm btn-primary" onclick="removeProductFromCart(${item.getProductId().getProductId()})"><i class="fa fa-times"></i></button></td>
+                                    <c:set var="totalCart" scope="session" value="${totalCart + item.getProduct().getPrice()*item.getQuantity()}" />
+                                    <td data-id="totalPriceProduct${item.getProduct().getProductId()}" class="align-middle"><c:out value="${item.price}" /></td>
+                                    <td class="align-middle"><a href="updateQuantity?action=delete&cartItemID=${item.getCartItemId()}" class="btn btn-sm btn-primary"><i class="fa fa-times"></i></a></td>
                                 </tr>
                             </c:forEach>
                         </tbody>
@@ -112,8 +133,12 @@
                                     <h6 id="totalPriceCart" class="font-weight-medium"><c:out value="${totalCart}" /></h6>
                                 </div>
                                 <div class="d-flex justify-content-between">
-                                    <h6 class="font-weight-medium">Shipping</h6>
+                                    <h6 class="font-weight-medium">Ship Fee For Each Orders</h6>
                                     <h6 id="shipFees" class="font-weight-medium">10</h6>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="font-weight-medium">Orders in Cart</h6>
+                                    <h6 id="shipFees" class="font-weight-medium">${sessionScope.ShoppingCart.countUniqueSellers()}</h6>
                                 </div>
                                 <div class="d-flex justify-content-between">
                                     <h6 class="font-weight-medium">Discount</h6>
@@ -123,9 +148,9 @@
                             <div id="checkOutForm" class="card-footer border-secondary bg-transparent">
                                 <div class="d-flex justify-content-between mt-2">
                                     <h5 class="font-weight-bold">Total</h5>
-                                    <h5 id="totalPriceCartAddShip" class="font-weight-bold"><c:out value="${totalCart + 10}" /></h5>
+                                    <h5 id="totalPriceCartAddShip" class="font-weight-bold"><c:out value="${totalCart+10*sessionScope.ShoppingCart.countUniqueSellers()}" /></h5>
                                 </div>
-                                <button onclick="proceedToCheckout()" class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</button>
+                                <a href="addOrder.jsp?totalPrice=${totalCart+10*sessionScope.ShoppingCart.countUniqueSellers()}" class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</a>
                             </div>
                         </div>
                     </c:if>
@@ -143,8 +168,8 @@
                         <h1 class="mb-4 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border border-white px-3 mr-1">E</span>Shopper</h1>
                     </a>
                     <p>Chuyên cung cấp các mẫu hợp thời. Không ngại bạn là ai</p>
-                    <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>Quy Nhơn, Bình Định</p>
-                    <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>Group2@gmail.com</p>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>Sơn Trà, Đà Nẵng</p>
+                    <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>Group4@gmail.com</p>
                     <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+84 8147 4189</p>
                 </div>
                 <div class="col-lg-6 col-md-12">

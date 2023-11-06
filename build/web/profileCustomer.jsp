@@ -57,7 +57,7 @@
                         <div class="form-group">
                             <label for="name" class="col-sm-3 control-label">Phone Number</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control" name="phone" id="phone" placeholder="${sessionScope.user.getPhone()}" ${statusSave}>
+                                <input type="text" class="form-control" name="phone" id="phone" placeholder="${sessionScope.user.getPhone()}" ${statusSave} pattern="^\d{10}$|^(\d{3})[- ]?\d{3}[- ]?\d{4}$" oninvalid="setCustomValidity('the phone number must be exactly 10 digits for the format 1234567890 or 123-456-7890.')" oninput="setCustomValidity('')">
                             </div>
                         </div>
                         <div class="form-group">

@@ -4,8 +4,10 @@
    Author     : Raiku
 --%>
 
+<%@page import="DAO.DAO"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="java.util.Base64" %>
 <!DOCTYPE html>
 <html lang="en">
 <%
@@ -22,6 +24,7 @@
         search="";
     }
 %>
+
     <head>
         <meta charset="utf-8">
         <title>CART FASHION</title>
@@ -50,8 +53,15 @@
         <link href="css/manager.css" rel="stylesheet" type="text/css"/>
         <style>
             img{
-                width: 300px;
-                height: 180px;
+                width: 200px;
+                height: 120px;
+            }
+            .inactive-product {
+                color: #ff0000;
+            }
+
+            .active-product {
+                color: #00ff00;
             }
         </style>
     </head>
@@ -77,12 +87,12 @@
                 <div class="table-title">
                     <div class="row">
                         <div class="col-lg-4 d-none d-lg-block">
-                            <h2>Manage <b>Categories</b></h2>
+                            <h2>Manage <b>Products</b></h2>
                         </div>
                         <div class="col-lg-5 col-5 text-left">
-                            <form action="CategoryManagerController" method="Post">
+                            <form action="productManagerController" method="Post">
                                 <div class="input-group">
-                                    <input name="search" id="input-search" type="text" class="form-control" placeholder="Search for Categories" value = "<%= search %>">
+                                    <input name="search" id="input-search" type="text" class="form-control" placeholder="Search for Products" value = "<%= search %>">
                                     <button type="submit" name="action" value="search" class="btn btn-outline-primary d-flex align-items-center" style="border: none; background: none;">
                                         <span class="input-group-text bg-transparent text-primary">
                                             <i class="fa fa-search"></i>
@@ -99,23 +109,51 @@
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <!--<th>Image</th>-->
-                            <th>Price</th>
-                            <th>Actions</th>
+                            <th class="align-middle">ID</th>
+                            <th class="align-middle">Name</th>
+                            <th class="align-middle">Image</th>
+                            <th class="align-middle">Quantity</th>
+                            <th class="align-middle">Price</th>
+                            <th class="align-middle">Status</th>
+                            <th class="align-middle">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <c:forEach items="${listP}" var="o">
                             <tr>
-                                <td>${o.productId}</td>
-                                <td>${o.name}</td>
+                                <td class="align-middle">${o.productId}</td>
+                                <td class="align-middle">${o.name}</td>
+                                <td class="align-middle">
+                                    <c:if test="${not empty o.images}">
+                                        <img src="data:image/jpeg;base64,${o.images[0].getImg()}" alt="Image" />
+                                    </c:if>
+                                </td>
+                                <td class="align-middle">${o.quantity}</td>
+                                <td class="align-middle">${o.price} $</td>
+                                    <c:if test="${o.status == '0'}">
+                                        <td class="align-middle inactive-product">Inactive</td>
+                                    </c:if>
 
-                                <td>${o.price} $</td>
+                                    <c:if test="${o.status == '1'}">
+                                        <td class="align-middle active-product">Active</td>
+                                    </c:if>
                                 <td>
-                                    <a href="loadProduct?pid=${o.productId}"  class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-                                    <a href="delete?pid=${o.productId}" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+                                    <form action="productManagerController" method="POST" id="signup-form" class="btn">
+                                        <input type="hidden" name="product_id" id="product_id" value="${o.productId}"/>
+                                        <div>
+                                        <c:if test="${sessionScope.user.getRole() == '1'}">
+                                            <c:if test="${o.status == '0'}">
+                                            <button type="submit" name="action" value="changeStatus" class="btn btn-primary">Activate</button>
+                                            </c:if>
+
+                                            <c:if test="${o.status == '1'}">
+                                                <button type="submit" name="action" value="changeStatus" class="btn btn-primary">Inactivate</button>
+                                            </c:if>
+                                        </c:if>
+                                        <button type="submit" name="action" value="detail" class="btn btn-primary"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></button>
+                                        <button type="submit" name="action" value="delete" class="btn btn-primary" onclick="return confirm('Are you sure to delete product ${o.name}?')"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></button>
+                                    </div>
+                                    </form>
                                 </td>
                             </tr>
                         </c:forEach>
@@ -130,15 +168,13 @@
                     </ul>
                 </div>
             </div>
-            <a href="#"><button type="button" class="btn btn-primary">Back to home</button>
-
         </div>
         <!-- Edit Modal HTML -->
         <div id="addProduct" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form action="productManagerController" method="post">
-                        <div class="modal-header">						
+                    <form action="addProductController" method="POST" enctype="multipart/form-data">
+                        <div class="modal-header">
                             <h4 class="modal-title">Add Product</h4>
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         </div>
@@ -148,12 +184,12 @@
                                 <input name="name" type="text" class="form-control" required>
                             </div>
                             <div class="form-group">
-                                <label>Images</label> <br/>
-                                <input name="images" type="file" class="form-control" placeholder="Enter Image" multiple required>
+                                <label>Images</label>
+                                <input name="images" type="file" class="form-control" placeholder="Enter Image" multiple="multiple" required>
                             </div>
                             <div class="form-group">
                                 <label>Price</label>
-                                <input name="price" type="text" class="form-control" required>
+                                <input name="price" type="number" class="form-control" required>
                             </div>
                             <div class="form-group">
                                 <label>Quality</label>
@@ -175,7 +211,7 @@
                         </div>
                         <div class="modal-footer">
                             <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                            <input type="submit" class="btn btn-success" value="Add">
+                            <input type="submit" name="action" class="btn btn-success" value="Add">
                         </div>
                     </form>
                 </div>

@@ -154,14 +154,18 @@ public class productManagerController extends HttpServlet {
                 }
                 processRequest(request, response);
                 break;
-            case "delete":
-                int productIdDelete = Integer.parseInt(request.getParameter("product_id"));
-                dao.deleteImagesByProductId(productIdDelete);
-                dao.deleteProduct(productIdDelete);
+            case "Edit":
+                int pid = Integer.parseInt(request.getParameter("pid"));
+                Product productB = dao.getProductWithImagesByProductID(pid);
+                String nameE = request.getParameter("name");
+                String priceStringE = request.getParameter("price");
+                BigDecimal priceE = new BigDecimal(priceStringE);
+                int quantityE = Integer.parseInt(request.getParameter("quantity"));
+                String descriptionE = request.getParameter("description");
+                int categoryE = Integer.parseInt(request.getParameter("category"));
+                Product productE = new Product(pid, nameE, priceE, quantityE, descriptionE, productB.getQuantitySold(), dao.getCategoryById(categoryE), productB.getUser(), productB.getStatus());
+                dao.changeProduct(productE);
                 processRequest(request, response);
-                break;
-            case "detail":
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Detail");
                 break;
             case "changeStatus":
                 int productIdChangeStatus = Integer.parseInt(request.getParameter("product_id"));

@@ -41,7 +41,10 @@
                 height: 400px;
                 object-fit: contain;
             }
-
+            .scrollable-list {
+                overflow-y: auto;
+                max-height: 100%;
+            }
         </style>
     </head>
 
@@ -120,7 +123,7 @@
                     </a>
 
                     <nav class="collapse show navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0" id="navbar-vertical">
-                        <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
+                        <div class="navbar-nav w-100" style="height: 410px; overflow-y: auto;" >
                             <!--
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link" data-toggle="dropdown">Dresses <i class="fa fa-angle-down float-right mt-1"></i></a>
@@ -132,6 +135,7 @@
                             </div>
                             -->
                             <c:if test="${sessionScope.user.getRole() == '2' || sessionScope.user == null}">
+                                <div class="scrollable-list">
                             <ul class="navbar-nav w-100 overflow-hidden" style="height: 410px">
                                 <c:forEach items="${sessionScope.listCC}" var="o">
                                     <li class="nav-item">
@@ -139,6 +143,7 @@
                                     </li>
                                 </c:forEach>
                             </ul>
+                                    </div>
                             </c:if>
                         </div>
                     </nav>

@@ -113,14 +113,14 @@
                     <div  id="addCartStatus" class="col-12 text-center" style="color: red;"> </div>
                 </div>
                 <div class="col-lg-4">
-                    <form onsubmit="return applyCoupon()" class="mb-5" action="">
+<!--                    <form onsubmit="return applyCoupon()" class="mb-5" action="">
                         <div class="input-group">
                             <input id="coupon" type="text" minlength="5" pattern="[0-9A-Z]+" required class="form-control p-4" placeholder="Coupon Code">
                             <div class="input-group-append">
                                 <button class="btn btn-primary">Apply Coupon</button>
                             </div>
                         </div>
-                    </form>
+                    </form>-->
                     <c:if test="${totalCart > 0}">
                         <div id="totalCart" class="card border-secondary mb-5">
                             <div class="card-header bg-secondary border-0">

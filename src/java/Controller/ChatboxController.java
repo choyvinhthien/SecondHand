@@ -42,18 +42,18 @@ public class ChatboxController extends HttpServlet {
         User user2 = dao.getUserByID(uid);
         Chatroom chatroom = new Chatroom(user1, user2);
         Chatroom check_chatroom = dao.getChatRoomByUsersId(chatroom);
-        if(check_chatroom!=null){
-            List<Message> chatList = dao.getChatMessages(check_chatroom.getRoomId());
-            request.setAttribute("chatList", chatList);
-            request.setAttribute("room_id", check_chatroom.getRoomId());
-            request.getRequestDispatcher("chatBox.jsp").forward(request, response);
-        }
-        else{
+        if(check_chatroom==null){
             dao.addChatRoom(chatroom.getUser1().getUserId(), chatroom.getUser2().getUserId());
             Chatroom new_chatroom = dao.getChatRoomByUsersId(chatroom);
             List<Message> chatList = dao.getChatMessages(new_chatroom.getRoomId());
             request.setAttribute("chatList", chatList);
             request.setAttribute("room_id", new_chatroom.getRoomId());
+            request.getRequestDispatcher("chatBox.jsp").forward(request, response);
+        }
+        else{
+            List<Message> chatList = dao.getChatMessages(check_chatroom.getRoomId());
+            request.setAttribute("chatList", chatList);
+            request.setAttribute("room_id", check_chatroom.getRoomId());
             request.getRequestDispatcher("chatBox.jsp").forward(request, response);
         }
     }

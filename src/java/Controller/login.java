@@ -72,7 +72,13 @@ public class login extends HttpServlet {
         }else{
             HttpSession session=request.getSession();
             session.setAttribute("user", u);
-            response.sendRedirect("index.jsp");
+            if("1".equals(u.getRole())){
+                response.sendRedirect("DashboardController");
+            }else if("2".equals(u.getRole())){
+                response.sendRedirect("index.jsp");
+            }else{
+                response.sendRedirect("OrderForShipperController");
+            }
         }
     }
 

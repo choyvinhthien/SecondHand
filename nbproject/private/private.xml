@@ -3,51 +3,76 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/OrderForShipperController.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/LoginGoogleHandler.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/DetailProduct.jsp</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/dto/OrderTable.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/DiscountManagerController.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/shipperConfirmController.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/DAO/DAO.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/detail.jsp</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/dto/ShoppingCart.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/dto/CartItem.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/dto/User.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/cart.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/profileController.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/CategoryController.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/dto/Review.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/dto/Product.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/Register.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/accountManager.jsp</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/entity/Constants.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/index.jsp</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/shopDetail.jsp</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/DashboardController.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/productManager.jsp</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/categoryManager.jsp</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/DetailProductController.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/OrderForSellerController.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/shop.jsp</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/dashboard.jsp</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/addMessage.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/AddReviews.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/messenger.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/verifyEmail.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/OrderDetail.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/changeProductStatusController.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/Login.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/chatRoomManager.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/AccountManagerController.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/addProductManager.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/chatBox.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/orderForSeller.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/profileCustomer.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/OrderForShipperController.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/DetailProduct.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/DiscountManagerController.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/chatBoxManager.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/dto/Category.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/DAO/DAO.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/logout.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/dto/ShoppingCart.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/dto/CartItem.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/dto/User.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/dto/Chatroom.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/cart.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/validation.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/changePassword.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/ChatboxController.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/dto/Product.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/Register.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/RatingController.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/shopDetail.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/login.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/productManager.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/dto/Message.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/DetailProductController.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/dto/OrderItem.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/orderManager.jsp</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/forgotPasswordController.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/addtoCart.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/addProductController.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/addProduct.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/FilterByPriceController.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/header.jsp</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/ShopDetailController.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/productManagerController.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/changePasswordController.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/OrderManagerController.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/messenger.jsp</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/OrderDetail.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/Login.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/dto/Discount.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/orderForShipper.jsp</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/MessengerManagerController.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/RegisterControl.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/AccountManagerController.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/addProductManager.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/detailOrderTable.jsp</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/dto/Image.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/editProduct.jsp</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/orderForSeller.jsp</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/src/java/Controller/shopController.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/SecondHandClothesPlatform/web/addOrder.jsp</file>
         </group>

@@ -948,6 +948,25 @@ public class DAO extends DBconnect {
         }
         return i;
     }
+    public int randomProductID() {
+    Random r = new Random();
+    int i;
+    try {
+        while (true) {
+            i = r.nextInt(1000);
+            String sqlQuery = "SELECT COUNT(*) AS count FROM product WHERE product_id = ?";
+            PreparedStatement ps = connection.prepareStatement(sqlQuery);
+            ps.setInt(1, i);
+            ResultSet result = ps.executeQuery();
+            if (result.next() && result.getInt("count") == 0) {
+                return i;
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return -1; // Trả về -1 nếu không tìm thấy ID hợp lệ sau một số lần thử
+}
     public OrderTable getOrderTableByOrderIdWithoutOrderItems(int order_id) {
         DAO dao = new DAO();
         OrderTable orderTable = new OrderTable();
@@ -1402,7 +1421,7 @@ public class DAO extends DBconnect {
         return list;
     }
     public void addChatRoom(int user1_id, int user2_id){
-        String query = "INSERT INTO [chatroom] ([user1Id], [user2Id]) VALUES (?, ?)";
+        String query = "INSERT INTO [chatroom] ( user1Id, [user2Id]) VALUES (?, ?)";
         try {
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setInt(1, user1_id);
@@ -1464,7 +1483,7 @@ public class DAO extends DBconnect {
         return chatroom;
     }
     public Chatroom getChatRoomByUsersId(Chatroom chatroom){
-        Chatroom o = new Chatroom();
+        Chatroom o = null;
         DAO dao = new DAO();
         try {
             String sql = "SELECT * FROM [platform_online].[dbo].[chatroom] " +
@@ -1603,17 +1622,48 @@ public class DAO extends DBconnect {
         }
         return list;
     }
+    public void changeProduct(Product product){
+        String queryString = "UPDATE [product] SET name = ?, price = ?, quantity = ?, description = ?, category_id = ? WHERE product_id = ? ";
+        try {
+            PreparedStatement ps = connection.prepareStatement(queryString);
+            ps.setString(1, product.getName());
+            ps.setBigDecimal(2, product.getPrice());
+            ps.setInt(3, product.getQuantity());
+            ps.setString(4, product.getDescription());
+            ps.setInt(5, product.getCategory().getCategoryId());
+            ps.setInt(6, product.getProductId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+    public List<Discount> getDiscountByDate(){
+        List<Discount> discounts = new ArrayList<>();
+        String query = "SELECT * " +
+                         "FROM [platform_online].[dbo].[discount] " +
+                         "WHERE ? <= valid_to";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            Timestamp today = new Timestamp(System.currentTimeMillis());
+            ps.setTimestamp(1, today);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                discounts.add(new Discount(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getFloat(3), 
+                        rs.getDate(4),
+                        rs.getDate(5),
+                        rs.getString(6)
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return discounts;
+    }
     public static void main(String[] args) {
         DAO dao = new DAO();
-        List<Message> chatMessages = dao.getChatMessages(1);
-        for (Message message : chatMessages) {
-            System.out.println("Message ID: " + message.getMessageId());
-            System.out.println("Sender ID: " + message.getSenderId());
-            System.out.println("Sender Name: " + message.getSenderName());
-            System.out.println("Content: " + message.getContent());
-            System.out.println("Timestamp: " + message.getTimestamp());
-            System.out.println("Room ID: " + message.getChatroom().getRoomId());
-            System.out.println("----------------------");
-        }
+        dao.addChatRoom(3, 5);
     }
 }

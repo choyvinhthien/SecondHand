@@ -41,6 +41,19 @@
             }
         });
     });
+    $(document).ready(function() {
+        $('#editProduct').on('input', '#priceInput', function() {
+            var price = parseFloat($(this).val());
+            var serviceFeeInput = $('#editProduct #serviceFeeInput');
+            var receiveMoneyInput = $('#editProduct #receiveMoneyInput');
+            if (!isNaN(price)) {
+                var serviceFee = price * 0.1; // Example: 10% of the price
+                var receiveMoney = price - serviceFee;
+                serviceFeeInput.val(serviceFee.toFixed(2));
+                receiveMoneyInput.val(receiveMoney.toFixed(2));
+            }
+        });
+    });
 </script>
     <head>
         <meta charset="utf-8">
@@ -177,6 +190,7 @@
                                             </c:if>
                                         </c:if>
                                             <%-- --%>
+                                        <a href="#editProduct"  class="btn btn-primary" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
                                         <c:if test="${sessionScope.user.getRole() == '2'}">
                                             <c:if test="${o.status == '1'}">
                                                 <a href="changeProductStatusController?pid=${o.productId}&status=${o.status}&action=block" type="submit" name="action" value="changeStatus" class="btn btn-primary">Block</a>
@@ -186,11 +200,68 @@
                                                 <a href="changeProductStatusController?pid=${o.productId}&status=${o.status}&action=unblock" type="submit" name="action" value="changeStatus" class="btn btn-primary">UnBlock</a>
                                             </c:if>
                                         </c:if>
-                                        <button type="submit" name="action" value="detail" class="btn btn-primary"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></button>
                                     </div>
                                     </form>
                                 </td>
                             </tr>
+                            <!-- Edit Modal HTML -->
+        <div id="editProduct" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="addProductController" method="POST">
+                        <input type="hidden" name="pid" value="${o.productId}">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Edit Product</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        <div class="modal-body">					
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input name="name" type="text" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Price</label>
+                                <input id="priceInput" name="price" type="number" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label>Service Fee</label>
+                                        <input id="serviceFeeInput" name="serviceFee" type="number" class="form-control" disabled>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>You Will Get</label>
+                                        <input id="receiveMoneyInput" name="receiveMoney" type="number" class="form-control" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Quality</label>
+                                <input type="number" min="0" class="form-control" name="quantity" id="quantity" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea name="description" class="form-control" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Category</label>
+                                <select name="category" class="form-select" aria-label="Default select example">
+                                    <c:forEach items="${sessionScope.listCC}" var="o"><%-- Vòng lặp list categories ra --%>
+                                        <option value="${o.categoryId}">${o.name}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                            <input type="submit" name="action" class="btn btn-success" value="Edit">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Cart End -->
                         </c:forEach>
                     </tbody>
                 </table>      

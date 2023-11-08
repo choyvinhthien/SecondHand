@@ -10,7 +10,7 @@ import dto.Review;
 import dto.User;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Date;
+import java.sql.Timestamp;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -37,17 +37,20 @@ public class AddReviews extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
         DAO dao = new DAO();
-        float rating = Float.parseFloat(request.getParameter("rating"));
-        String comment = request.getParameter("comment");
-        Date ratingDate = new Date();
-        User user = (User) session.getAttribute("user");
-        Product product = dao.getProductWithImagesByProductID(Integer.parseInt(request.getParameter("productId")));
-        String submit = request.getParameter("submit");
-        Review review = new Review(rating, comment, ratingDate, user, product);
-        dao.addReview(review);
-        int pid = product.getProductId();
-        String targetURL = "DetailProductController?pid=" + pid;
-        response.sendRedirect(targetURL);
+        if(session.getAttribute("user")==null){
+            response.sendRedirect("Login.jsp");
+        }else{
+            float rating = Float.parseFloat(request.getParameter("rating"));
+            String comment = request.getParameter("comment");
+            Timestamp ratingDate = new Timestamp(System.currentTimeMillis());
+            User user = (User) session.getAttribute("user");
+            Product product = dao.getProductWithImagesByProductID(Integer.parseInt(request.getParameter("productId")));
+            Review review = new Review(rating, comment, ratingDate, user, product);
+            dao.addReview(review);
+            int pid = product.getProductId();
+            String targetURL = "DetailProductController?pid=" + pid;
+            response.sendRedirect(targetURL);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

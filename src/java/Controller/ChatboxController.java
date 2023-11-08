@@ -5,13 +5,12 @@
 package Controller;
 
 import DAO.DAO;
-import dto.Product;
-import dto.Review;
+import dto.Chatroom;
+import dto.Message;
 import dto.User;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Timestamp;
-import java.util.Date;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +21,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author Admin
  */
-public class RatingController extends HttpServlet {
+public class ChatboxController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,7 +35,27 @@ public class RatingController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+        HttpSession session = request.getSession();
+        DAO dao = new DAO();
+        User user1 = (User)session.getAttribute("user");
+        int uid = Integer.parseInt(request.getParameter("uid"));
+        User user2 = dao.getUserByID(uid);
+        Chatroom chatroom = new Chatroom(user1, user2);
+        Chatroom check_chatroom = dao.getChatRoomByUsersId(chatroom);
+        if(check_chatroom!=null){
+            List<Message> chatList = dao.getChatMessages(check_chatroom.getRoomId());
+            request.setAttribute("chatList", chatList);
+            request.setAttribute("room_id", check_chatroom.getRoomId());
+            request.getRequestDispatcher("chatBox.jsp").forward(request, response);
+        }
+        else{
+            dao.addChatRoom(chatroom.getUser1().getUserId(), chatroom.getUser2().getUserId());
+            Chatroom new_chatroom = dao.getChatRoomByUsersId(chatroom);
+            List<Message> chatList = dao.getChatMessages(new_chatroom.getRoomId());
+            request.setAttribute("chatList", chatList);
+            request.setAttribute("room_id", new_chatroom.getRoomId());
+            request.getRequestDispatcher("chatBox.jsp").forward(request, response);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -65,22 +84,7 @@ public class RatingController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        DAO dao = new DAO();
-        int rating = Integer.parseInt(request.getParameter("rating"));
-        String comment = request.getParameter("comment");
-        Timestamp ratingDate = new Timestamp(System.currentTimeMillis());
-        User user = (User) session.getAttribute("user");
-        Product product = dao.getProductWithImagesByProductID(Integer.parseInt(request.getParameter("productId")));
-        String submit = request.getParameter("submit");
-        switch (submit) {
-            case "Leave Your Review":
-                Review review = new Review(rating, comment, ratingDate, user, product);
-                dao.addReview(review);
-                break;
-            default:
-                throw new AssertionError();
-        }
+        processRequest(request, response);
     }
 
     /**

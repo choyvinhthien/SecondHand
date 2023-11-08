@@ -4,20 +4,20 @@
  */
 package dto;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class Review {
     private int reviewId;
     private float rating;
     private String comment;
-    private Date date;
+    private Timestamp date;
     private User user;
     private Product product;
     
     public Review() {
     }
     
-    public Review(float rating, String comment, Date date, User user, Product product) {
+    public Review(float rating, String comment, Timestamp date, User user, Product product) {
         this.rating = rating;
         this.comment = comment;
         this.date=date;
@@ -25,7 +25,7 @@ public class Review {
         this.product = product;
     }
 
-    public Review(int reviewId, float rating, String comment, Date date, User user, Product product) {
+    public Review(int reviewId, float rating, String comment, Timestamp date, User user, Product product) {
         this.reviewId = reviewId;
         this.rating = rating;
         this.comment = comment;
@@ -58,11 +58,11 @@ public class Review {
         this.comment = comment;
     }
 
-    public Date getDate() {
+    public Timestamp getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(Timestamp date) {
         this.date = date;
     }
 

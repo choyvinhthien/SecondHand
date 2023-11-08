@@ -67,7 +67,7 @@ public class login extends HttpServlet {
         DAO dao=new DAO();
         User u=dao.doLogin(Username, Password);
         if(u==null){
-                request.setAttribute("message", "Incorrect usename or password");
+                request.setAttribute("message", "Incorrect username/email or password");
                 request.getRequestDispatcher("Login.jsp").forward(request, response);
         }else{
             HttpSession session=request.getSession();

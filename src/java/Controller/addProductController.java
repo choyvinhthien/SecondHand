@@ -54,7 +54,14 @@ public class addProductController extends HttpServlet {
         int quantity = Integer.parseInt(request.getParameter("quantity"));
         String description = request.getParameter("description");
         int category = Integer.parseInt(request.getParameter("category"));
-        Product product = new Product(name, price, quantity, description, 0,dao.getCategoryById(category), (User) session.getAttribute("user"),"0");
+        Product product = new Product(name,
+                price,
+                quantity,
+                description,
+                0,
+                dao.getCategoryById(category),
+                (User) session.getAttribute("user"),//người đăng
+                "0");
         dao.addProduct(product);
         int product_id = dao.findProductId(product);
         //-------------------------------------------------------
@@ -92,6 +99,8 @@ public class addProductController extends HttpServlet {
                 //-------------------------------------------------------------
                 dao.addImage(product_id, imageData);
         }
+        //kết thúc add sản phẩm
+        //tải lại trang quản lý sản phẩm
         String indexPage = request.getParameter("index");
         if(indexPage==null){
             indexPage = "1";

@@ -4,6 +4,7 @@
  */
 package dto;
 
+import DAO.DAO;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -169,9 +170,13 @@ public class Product {
                 || product.getName().toLowerCase().contains(searchString);
     }
     public int countReviews(){
+        DAO dao = new DAO();
+        this.reviews = dao.getReviewsByProductId(productId);
         return reviews.size();
     }
     public float averageReviews(){
+        DAO dao = new DAO();
+        this.reviews = dao.getReviewsByProductId(productId);
         float a = 0;
         for(Review review : reviews){
             a += review.getRating();

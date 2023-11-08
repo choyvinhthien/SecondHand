@@ -77,9 +77,10 @@
                     <div class="d-flex mb-3">
                         <small class="pt-1">ADMINISTRATOR</small>
                     </div>
-                    <h5>Product: ${admin.countProducts()}</h5> <h5>Customers: ${admin.countCustomers()}</h5> <h5>Shippers: ${admin.countShippers()}</h5>
-                    <a href="MessengerController?uid=${detail.userId}" class="btn btn-primary" type="submit">Chat</a>
-                    <p class="mb-4">Please scroll down to see more products.</p>
+                    <h5>Product: ${admin.countProducts()}</h5>
+                    <h5>Customers: ${admin.countCustomers()}</h5>
+                    <h5>Shippers: ${admin.countShippers()}</h5>
+                    <h5>Revenue: ${admin.Revenue()}$</h5>
                     <div class="d-flex pt-2">
                         <p class="text-dark font-weight-medium mb-0 mr-2">Share on:</p>
                         <div class="d-inline-flex">

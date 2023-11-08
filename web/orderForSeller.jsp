@@ -52,7 +52,7 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Customer ID</th>
+                        <th>Buyer</th>
                         <th>Order Date</th>
                         <th>Total Amount</th>
                         <th>Payment Method</th>
@@ -66,7 +66,7 @@
                         <input type="hidden" name="order_id" value="${item.getOrderId()}">
                         <tr>
                             <td>${item.getOrderId()}</td>
-                            <td>${item.getCustomer().getUserId()}</td>
+                            <td>${item.getCustomer().getUsername()}</td>
                             <td>${item.getOrderDate()}</td>
                             <td>${item.getTotalAmount()}</td>
                             <!--Payment Method-->

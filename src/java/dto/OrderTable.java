@@ -5,6 +5,7 @@
 package dto;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class OrderTable {
     private String shipMail;
     private String shipPhone;
     private String shipAddress;
-    private Date orderDate;
+    private Timestamp orderDate;
     private BigDecimal shipFee;
     private Discount discount;
     private BigDecimal totalAmount;
@@ -33,7 +34,7 @@ public class OrderTable {
     public OrderTable() {
     }
 
-    public OrderTable(int orderId, String shipName, String shipMail, String shipPhone, String shipAddress, Date orderDate, BigDecimal shipFee, Discount discount, BigDecimal totalAmount, String paymentMethod, String status, User customer, User seller, User shipper, List<OrderItem> orderItems) {
+    public OrderTable(int orderId, String shipName, String shipMail, String shipPhone, String shipAddress, Timestamp orderDate, BigDecimal shipFee, Discount discount, BigDecimal totalAmount, String paymentMethod, String status, User customer, User seller, User shipper, List<OrderItem> orderItems) {
         this.orderId = orderId;
         this.shipName = shipName;
         this.shipMail = shipMail;
@@ -51,7 +52,7 @@ public class OrderTable {
         this.orderItems = orderItems;
     }
 
-    public OrderTable(String shipName, String shipMail, String shipPhone, String shipAddress, Date orderDate, BigDecimal shipFee, Discount discount, BigDecimal totalAmount, String paymentMethod, String status, User customer, User seller, User shipper, List<OrderItem> orderItems) {
+    public OrderTable(String shipName, String shipMail, String shipPhone, String shipAddress, Timestamp orderDate, BigDecimal shipFee, Discount discount, BigDecimal totalAmount, String paymentMethod, String status, User customer, User seller, User shipper, List<OrderItem> orderItems) {
         this.shipName = shipName;
         this.shipMail = shipMail;
         this.shipPhone = shipPhone;
@@ -68,7 +69,7 @@ public class OrderTable {
         this.orderItems = orderItems;
     }
 
-    public OrderTable(String shipName, String shipMail, String shipPhone, String shipAddress, Date orderDate, BigDecimal shipFee, Discount discount, BigDecimal totalAmount, String paymentMethod, String status, User customer, User seller, User shipper) {
+    public OrderTable(String shipName, String shipMail, String shipPhone, String shipAddress, Timestamp orderDate, BigDecimal shipFee, Discount discount, BigDecimal totalAmount, String paymentMethod, String status, User customer, User seller, User shipper) {
         this.shipName = shipName;
         this.shipMail = shipMail;
         this.shipPhone = shipPhone;
@@ -84,7 +85,7 @@ public class OrderTable {
         this.shipper = shipper;
     }
 
-    public OrderTable(String shipName, String shipMail, String shipPhone, String shipAddress, Date orderDate, BigDecimal shipFee, Discount discount, String paymentMethod, String status, User customer) {
+    public OrderTable(String shipName, String shipMail, String shipPhone, String shipAddress, Timestamp orderDate, BigDecimal shipFee, Discount discount, String paymentMethod, String status, User customer) {
         this.shipName = shipName;
         this.shipMail = shipMail;
         this.shipPhone = shipPhone;
@@ -96,7 +97,7 @@ public class OrderTable {
         this.status = status;
         this.customer = customer;
     }
-    public OrderTable(int orderId, String shipName, String shipMail, String shipPhone, String shipAddress, Date orderDate, BigDecimal shipFee, Discount discount, String paymentMethod, String status, User customer) {
+    public OrderTable(int orderId, String shipName, String shipMail, String shipPhone, String shipAddress, Timestamp orderDate, BigDecimal shipFee, Discount discount, String paymentMethod, String status, User customer) {
         this.orderId = orderId;
         this.shipName = shipName;
         this.shipMail = shipMail;
@@ -110,7 +111,7 @@ public class OrderTable {
         this.customer = customer;
     }
 
-    public OrderTable(int orderId, String shipName, String shipMail, String shipPhone, String shipAddress, Date orderDate, BigDecimal shipFee, Discount discount, BigDecimal totalAmount, String paymentMethod, String status, User customer, User seller, List<OrderItem> orderItems) {
+    public OrderTable(int orderId, String shipName, String shipMail, String shipPhone, String shipAddress, Timestamp orderDate, BigDecimal shipFee, Discount discount, BigDecimal totalAmount, String paymentMethod, String status, User customer, User seller, List<OrderItem> orderItems) {
         this.orderId = orderId;
         this.shipName = shipName;
         this.shipMail = shipMail;
@@ -129,7 +130,7 @@ public class OrderTable {
 
     
 
-    public OrderTable(int orderId, String shipName, String shipMail, String shipPhone, String shipAddress, Date orderDate, BigDecimal shipFee,Discount discount, BigDecimal totalAmount, String paymentMethod, String status, User customer, User seller) {
+    public OrderTable(int orderId, String shipName, String shipMail, String shipPhone, String shipAddress, Timestamp orderDate, BigDecimal shipFee,Discount discount, BigDecimal totalAmount, String paymentMethod, String status, User customer, User seller) {
         this.orderId = orderId;
         this.shipName = shipName;
         this.shipMail = shipMail;
@@ -198,11 +199,11 @@ public class OrderTable {
         this.shipAddress = shipAddress;
     }
 
-    public Date getOrderDate() {
+    public Timestamp getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(Date orderDate) {
+    public void setOrderDate(Timestamp orderDate) {
         this.orderDate = orderDate;
     }
 

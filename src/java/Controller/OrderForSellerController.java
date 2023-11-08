@@ -82,7 +82,7 @@ public class OrderForSellerController extends HttpServlet {
                     int new_quantity = orderItem.getProduct().getQuantity()-orderItem.getQuantity();
                     String status = "1";
                     if(new_quantity==0){
-                        status = "0";
+                        status = "2";
                     }
                     dao.changeProductQuantity(orderItem.getProduct(), new_quantity, quantity_sold, status);
                 } 

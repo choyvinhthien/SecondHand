@@ -96,7 +96,7 @@
                             </form>
                         </div>
                         <div class="col-lg-3 col-5 text-right">
-                            <a href="#addAccount"  class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Product</span></a>
+                            <a href="#addAccount"  class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Account</span></a>
                         </div>
                     </div>
                 </div>

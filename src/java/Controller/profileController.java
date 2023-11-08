@@ -47,7 +47,6 @@ public class profileController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
         String statusSave ="disabled";
         String statusEdit = "";
         request.setAttribute("statusSave", statusSave);
@@ -82,9 +81,7 @@ public class profileController extends HttpServlet {
                 break;
             case "save":
                 boolean Valid = true;
-                String username = request.getParameter("username");
-                String password =request.getParameter("password");
-                User baseC = dao.doLogin(username, password);
+                User baseC = (User)session.getAttribute("user");
                 String customerName =request.getParameter("customerName");
                 if(customerName==""){
                     customerName=baseC.getName();
@@ -101,8 +98,8 @@ public class profileController extends HttpServlet {
                 if(address==""){
                     address=baseC.getAddress();
                 }
-                dao.changeProfile(username, password, customerName, phone, address);
-                User changeC = dao.doLogin(username, password);
+                dao.changeProfile(baseC.getUsername(), baseC.getPassword(), customerName, phone, address);
+                User changeC = dao.doLogin(baseC.getUsername(), baseC.getPassword());
                 session.setAttribute("user", changeC);
                 if(Valid=true){
                     statusSave ="disabled";

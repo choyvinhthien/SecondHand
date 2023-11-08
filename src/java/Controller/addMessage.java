@@ -9,6 +9,7 @@ import dto.Message;
 import dto.User;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Timestamp;
 import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -38,7 +39,7 @@ public class addMessage extends HttpServlet {
         DAO dao = new DAO();
         User user = (User)session.getAttribute("user");
         String content = request.getParameter("message-input");
-        Date timestamp = new Date();
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         int room_id = Integer.parseInt(request.getParameter("room_id"));
         Message message = new Message(user.getUserId(), user.getName(), content, timestamp, dao.getChatRoomByRoomId(room_id));
         dao.addMessage(message);

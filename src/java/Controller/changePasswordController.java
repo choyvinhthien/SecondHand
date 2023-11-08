@@ -31,25 +31,24 @@ public class changePasswordController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
         DAO dao = new DAO();
         HttpSession session=request.getSession();
-        response.setContentType("text/html;charset=UTF-8");
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
+        User u = (User)session.getAttribute("user");
         String oldPassword = request.getParameter("oldPassword");
         String newPassword = request.getParameter("newPassword");
         String confirmPassword = request.getParameter("confirmPassword");
-        if(!password.equals(oldPassword)) {
+        if(!u.getPassword().equals(oldPassword)) {
             request.setAttribute("message", "Old Password is incorrect!");
             request.getRequestDispatcher("changePassword.jsp").forward(request, response);
         }else if(!newPassword.equals(confirmPassword)){
             request.setAttribute("message", "New Password and Comfirm Password are not match!");
             request.getRequestDispatcher("changePassword.jsp").forward(request, response);
         }else {
-            User u = dao.doLogin(username, password);
             dao.changePassword(u.getUserId(), newPassword);
-            u = dao.doLogin(username, newPassword);
+            u = dao.doLogin(u.getUsername(), newPassword);
             session.setAttribute("user", u);
+            request.setAttribute("message", "Successful!");
             request.getRequestDispatcher("changePassword.jsp").forward(request, response);
         }
     }

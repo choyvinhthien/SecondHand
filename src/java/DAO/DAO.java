@@ -25,6 +25,7 @@ import java.sql.Date;
 import java.util.Base64;
 import static java.util.Base64.getEncoder;
 import java.util.Random;
+import java.sql.Timestamp;
 
 public class DAO extends DBconnect {
 
@@ -454,7 +455,7 @@ public class DAO extends DBconnect {
             ps.setInt(5, product.getQuantitySold());
             ps.setInt(6, product.getCategory().getCategoryId());
             ps.setInt(7, product.getUser().getUserId());
-            ps.setString(8, "0");
+            ps.setString(8, product.getStatus());
             ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -498,6 +499,20 @@ public class DAO extends DBconnect {
         String query = "SELECT COUNT(*) FROM ["+tablename+"]";
         try {
             PreparedStatement ps = connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    public int getTotalByUserId(String tablename, int user_id){
+        String query = "SELECT COUNT(*) FROM ["+tablename+"] WHERE [user_id] = ? ";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, user_id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 return rs.getInt(1);
@@ -888,7 +903,7 @@ public class DAO extends DBconnect {
             ps.setString(3, orderTable.getShipMail());
             ps.setString(4, orderTable.getShipPhone());
             ps.setString(5, orderTable.getShipAddress());
-            ps.setObject(6, new java.sql.Date(orderTable.getOrderDate().getTime()));
+            ps.setTimestamp(6, orderTable.getOrderDate());
             ps.setBigDecimal(7, orderTable.getShipFee());
             ps.setString(8, orderTable.getDiscount().getCode());
             ps.setBigDecimal(9, orderTable.getTotalAmount());
@@ -952,7 +967,7 @@ public class DAO extends DBconnect {
                         rs.getString(3), 
                         rs.getString(4), 
                         rs.getString(5),
-                        rs.getDate(6), 
+                        rs.getTimestamp(6), 
                         rs.getBigDecimal(7).setScale(1, BigDecimal.ROUND_DOWN), 
                         dao.getDiscountByCode(rs.getString(8)), 
                         rs.getBigDecimal(9).setScale(1, BigDecimal.ROUND_DOWN), 
@@ -985,7 +1000,7 @@ public class DAO extends DBconnect {
                         rs.getString(3), 
                         rs.getString(4), 
                         rs.getString(5),
-                        rs.getDate(6), 
+                        rs.getTimestamp(6), 
                         rs.getBigDecimal(7).setScale(1, BigDecimal.ROUND_DOWN), 
                         dao.getDiscountByCode(rs.getString(8)), 
                         rs.getBigDecimal(9).setScale(1, BigDecimal.ROUND_DOWN), 
@@ -1038,7 +1053,7 @@ public class DAO extends DBconnect {
                         rs.getString(3), 
                         rs.getString(4), 
                         rs.getString(5),
-                        rs.getDate(6), 
+                        rs.getTimestamp(6), 
                         rs.getBigDecimal(7).setScale(1, BigDecimal.ROUND_DOWN), 
                         dao.getDiscountByCode(rs.getString(8)), 
                         rs.getBigDecimal(9).setScale(1, BigDecimal.ROUND_DOWN), 
@@ -1131,7 +1146,37 @@ public class DAO extends DBconnect {
                         rs.getString(3), 
                         rs.getString(4), 
                         rs.getString(5),
-                        rs.getDate(6), 
+                        rs.getTimestamp(6), 
+                        rs.getBigDecimal(7).setScale(1, BigDecimal.ROUND_DOWN), 
+                        dao.getDiscountByCode(rs.getString(8)), 
+                        rs.getBigDecimal(9).setScale(1, BigDecimal.ROUND_DOWN), 
+                        rs.getString(10), 
+                        rs.getString(11), 
+                        getUserByID(rs.getInt(12)), 
+                        getUserByID(rs.getInt(13)),
+                        dao.getOrderItemsByOrderId(rs.getInt(1))
+                ));
+            }
+        } catch (Exception e) {
+        }
+        return orderTables;
+    }
+    public List<OrderTable> getFinishedOrderTable() {
+        DAO dao = new DAO();
+        List<OrderTable> orderTables = new ArrayList<>();
+        String queryString = "SELECT * " +
+                    "FROM [platform_online].[dbo].[order_table] " +
+                    "WHERE status = '4'";
+        try {
+            PreparedStatement ps = connection.prepareStatement(queryString);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                orderTables.add(new OrderTable(rs.getInt(1),
+                        rs.getString(2), 
+                        rs.getString(3), 
+                        rs.getString(4), 
+                        rs.getString(5),
+                        rs.getTimestamp(6), 
                         rs.getBigDecimal(7).setScale(1, BigDecimal.ROUND_DOWN), 
                         dao.getDiscountByCode(rs.getString(8)), 
                         rs.getBigDecimal(9).setScale(1, BigDecimal.ROUND_DOWN), 
@@ -1163,7 +1208,7 @@ public class DAO extends DBconnect {
                         rs.getString(3), 
                         rs.getString(4), 
                         rs.getString(5),
-                        rs.getDate(6), 
+                        rs.getTimestamp(6), 
                         rs.getBigDecimal(7).setScale(1, BigDecimal.ROUND_DOWN), 
                         dao.getDiscountByCode(rs.getString(8)), 
                         rs.getBigDecimal(9).setScale(1, BigDecimal.ROUND_DOWN), 
@@ -1253,7 +1298,7 @@ public class DAO extends DBconnect {
                         rs.getString(3), 
                         rs.getString(4), 
                         rs.getString(5),
-                        rs.getDate(6), 
+                        rs.getTimestamp(6), 
                         rs.getBigDecimal(7).setScale(1, BigDecimal.ROUND_DOWN), 
                         dao.getDiscountByCode(rs.getString(8)), 
                         rs.getBigDecimal(9).setScale(1, BigDecimal.ROUND_DOWN), 
@@ -1276,7 +1321,7 @@ public class DAO extends DBconnect {
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setFloat(1, review.getRating());
             ps.setString(2, review.getComment());
-            ps.setObject(3, new java.sql.Date(review.getDate().getTime()));
+            ps.setTimestamp(3, review.getDate());
             ps.setInt(4, review.getUser().getUserId());
             ps.setInt(5, review.getProduct().getProductId());
             ps.executeUpdate();
@@ -1296,7 +1341,7 @@ public class DAO extends DBconnect {
                 Review review = new Review(rs.getInt(1), 
                         rs.getFloat(2), 
                         rs.getString(3),
-                        rs.getDate(4),
+                        rs.getTimestamp(4),
                         dao.getUserByID(rs.getInt(5)),
                         dao.getProductWithImagesByProductID(rs.getInt(6))
                 );
@@ -1320,7 +1365,31 @@ public class DAO extends DBconnect {
                 Review review = new Review(rs.getInt(1), 
                         rs.getFloat(2), 
                         rs.getString(3),
-                        rs.getDate(4),
+                        rs.getTimestamp(4),
+                        dao.getUserByID(rs.getInt(5)),
+                        dao.getProductWithImagesByProductID(rs.getInt(6))
+                );
+                list.add(review);
+            }
+        } catch (SQLException e) {
+            // Handle the exception according to your application's requirements
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public List<Review> getReviewsByUserOd(int user_id) {
+        DAO dao = new DAO();
+        List<Review> list = new ArrayList<>();
+        String queryString = "SELECT * from review WHERE user_id = ?";
+
+        try {PreparedStatement ps = connection.prepareStatement(queryString);
+            ps.setInt(1, user_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Review review = new Review(rs.getInt(1), 
+                        rs.getFloat(2), 
+                        rs.getString(3),
+                        rs.getTimestamp(4),
                         dao.getUserByID(rs.getInt(5)),
                         dao.getProductWithImagesByProductID(rs.getInt(6))
                 );
@@ -1362,7 +1431,7 @@ public class DAO extends DBconnect {
                 int senderId = rs.getInt(2);
                 String senderName = rs.getString(3);
                 String content = rs.getString(4);
-                Date timestamp = rs.getDate(5);
+                Timestamp timestamp = rs.getTimestamp(5);
                 int roomID = rs.getInt(6);
 
                 Message message = new Message(messageId, senderId, senderName, content, timestamp,getChatRoomByRoomId(roomID));
@@ -1394,6 +1463,33 @@ public class DAO extends DBconnect {
         }
         return chatroom;
     }
+    public Chatroom getChatRoomByUsersId(Chatroom chatroom){
+        Chatroom o = new Chatroom();
+        DAO dao = new DAO();
+        try {
+            String sql = "SELECT * FROM [platform_online].[dbo].[chatroom] " +
+                        "WHERE ([user1Id] = ? AND [user2Id] = ? ) OR ([user1Id] = ? AND [user2Id] = ? ) ";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, chatroom.getUser1().getUserId());
+            ps.setInt(2, chatroom.getUser2().getUserId());
+            ps.setInt(3, chatroom.getUser2().getUserId());
+            ps.setInt(4, chatroom.getUser1().getUserId());
+
+            // Execute the SQL statement
+            ResultSet rs = ps.executeQuery();
+
+            // Process the result set and populate the chat messages
+            while (rs.next()) {
+                o=new Chatroom(rs.getInt(1), 
+                        dao.getUserByID(rs.getInt(2)), 
+                        dao.getUserByID(rs.getInt(3)), 
+                        dao.getChatMessages(rs.getInt(1)));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return o;
+    }
     public List<Chatroom> getChatRoomsByUserId(int user_id){
         List<Chatroom> chatrooms = new ArrayList<>();
         DAO dao = new DAO();
@@ -1424,7 +1520,7 @@ public class DAO extends DBconnect {
             ps.setInt(1, message.getSenderId());
             ps.setString(2, message.getSenderName());
             ps.setString(3, message.getContent());
-            ps.setObject(4, new java.sql.Date(message.getTimestamp().getTime()));
+            ps.setTimestamp(4, message.getTimestamp());
             ps.setInt(5, message.getChatroom().getRoomId());
             ps.executeUpdate();
         } catch (Exception e) {

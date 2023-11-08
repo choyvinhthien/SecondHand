@@ -65,7 +65,7 @@
                 </div>
             </div>
             <div id="detailOrderTable">
-                <div class="modal-dialog">
+                <div class="modal-dialog-centered">
                     <div class="modal-content">
                         <form action="edit" method="post">
                             <div class="modal-header">						

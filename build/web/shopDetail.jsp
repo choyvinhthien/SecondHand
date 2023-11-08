@@ -76,16 +76,88 @@
                     <h3 class="font-weight-semi-bold"><strong>${detail.username}</strong></h3>
                     <div class="d-flex mb-3">
                         <div class="text-primary mr-2">
-                            <small class="fas fa-star"></small>
-                            <small class="fas fa-star"></small>
-                            <small class="fas fa-star"></small>
-                            <small class="fas fa-star-half-alt"></small>
-                            <small class="far fa-star"></small>
+                            <c:if test="${detail.averageReviews() == 0}">
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                            </c:if>
+                            <c:if test="${detail.averageReviews() > 0 && detail.averageReviews() <= 0.75}">
+                                <small class="fas fa-star-half-alt"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                            </c:if>
+                            <c:if test="${detail.averageReviews() > 0.75 && detail.averageReviews() <= 1.25}">
+                                <small class="fas fa-star"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                            </c:if>
+                            <c:if test="${detail.averageReviews() > 1.25 && detail.averageReviews() <= 1.75}">
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star-half-alt"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                            </c:if>
+                            <c:if test="${detail.averageReviews() > 1.75 && detail.averageReviews() <= 2.25}">
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                            </c:if>
+                            <c:if test="${detail.averageReviews() > 2.25 && detail.averageReviews() <= 2.75}">
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star-half-alt"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                            </c:if>
+                            <c:if test="${detail.averageReviews() > 2.75 && detail.averageReviews() <= 3.25}">
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                            </c:if>
+                            <c:if test="${detail.averageReviews() > 3.25 && detail.averageReviews() <= 3.75}">
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star-half-alt"></small>
+                                <small class="far fa-star"></small>
+                            </c:if>
+                            <c:if test="${detail.averageReviews() > 3.75 && detail.averageReviews() <= 4.25}">
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="far fa-star"></small>
+                            </c:if>
+                            <c:if test="${detail.averageReviews() > 4.25 && detail.averageReviews() <= 4.75}">
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star-half-alt"></small>
+                            </c:if>
+                                <c:if test="${detail.averageReviews() > 4.75 && detail.averageReviews() <= 5}">
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                            </c:if>
                         </div>
-                        <small class="pt-1">(50 Reviews)</small>
+                        <small class="pt-1">(detail.countReviews()} Reviews)</small>
                     </div>
-                    <h5>On Sale: ${detail.countProducts()}</h5> <h5>Sold: 0</h5>
-                    <a href="MessengerController?uid=${detail.userId}" class="btn btn-primary" type="submit">Chat</a>
+                    <h5>On Sale: ${detail.countProducts()}</h5> <h5>Sold: ${detail.countSoldProduct()}</h5>
+                    <a href="ChatboxController?uid=${detail.userId}" class="btn btn-primary" type="submit">Chat</a>
                     <p class="mb-4">Please scroll down to see more products.</p>
                     <div class="d-flex pt-2">
                         <p class="text-dark font-weight-medium mb-0 mr-2">Share on:</p>

@@ -13,6 +13,7 @@ import dto.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -102,11 +103,11 @@ public class OrderManagerController extends HttpServlet {
                     return;
                 }
                 List<CartItem> CartItemsList = shoppingCart.getCartItems();
-                Date orderDate = new Date();
+                Timestamp orderDate = new Timestamp(System.currentTimeMillis());
                 while(!CartItemsList.isEmpty()){
                     for(int i=1;i<CartItemsList.size();i++){
                         BigDecimal total_amount = new BigDecimal(0);
-                        OrderTable orderTable = new OrderTable(dao.randomOrderID("order_table"),ship_name, ship_mail, ship_phone, ship_address, orderDate, BigDecimal.valueOf(5), dao.getDiscountByCode(discount_code), payment_method, "1", customer);
+                        OrderTable orderTable = new OrderTable(dao.randomOrderID("order_table"),ship_name, ship_mail, ship_phone, ship_address, orderDate, BigDecimal.valueOf(10), dao.getDiscountByCode(discount_code), payment_method, "1", customer);
     //                  dao.createOrderTable(orderTable);
                         List<OrderItem> orderItemsList = new ArrayList<>();
                         if(CartItemsList.get(0).getProduct().getUser().getUserId()==CartItemsList.get(i).getProduct().getUser().getUserId()){

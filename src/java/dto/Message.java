@@ -4,6 +4,7 @@
  */
 package dto;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class Message {
@@ -11,13 +12,13 @@ public class Message {
     private int senderId;
     private String senderName;
     private String content;
-    private Date timestamp;
+    private Timestamp timestamp;
     private Chatroom chatroom;
     
     public Message() {
     }
     
-    public Message(int senderId, String senderName, String content, Date timestamp, Chatroom chatroom) {
+    public Message(int senderId, String senderName, String content, Timestamp timestamp, Chatroom chatroom) {
         this.senderId = senderId;
         this.senderName = senderName;
         this.content = content;
@@ -25,7 +26,7 @@ public class Message {
         this.chatroom = chatroom;
     }
 
-    public Message(int messageId, int senderId, String senderName, String content, Date timestamp, Chatroom chatroom) {
+    public Message(int messageId, int senderId, String senderName, String content, Timestamp timestamp, Chatroom chatroom) {
         this.messageId = messageId;
         this.senderId = senderId;
         this.senderName = senderName;
@@ -67,11 +68,11 @@ public class Message {
         this.content = content;
     }
 
-    public Date getTimestamp() {
+    public Timestamp getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
 

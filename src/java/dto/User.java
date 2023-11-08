@@ -5,6 +5,7 @@
 package dto;
 
 import DAO.DAO;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,8 @@ public class User {
     private String address;
     private String phone;
     private String role;
+    List<Review> reviews;
+    List<OrderTable> orderTables;
     
     public User() {
     }
@@ -164,6 +167,45 @@ public class User {
             return count;
         }else{
             return 0;
+        }
+    }
+    public int countReviews(){
+        DAO dao = new DAO();
+        this.reviews = dao.getReviewsByUserOd(userId);
+        return reviews.size();
+    }
+    public float averageReviews(){
+        DAO dao = new DAO();
+        this.reviews = dao.getReviewsByUserOd(userId);
+        float a = 0;
+        for(Review review : reviews){
+            a += review.getRating();
+        }
+        a = a/reviews.size();
+        return a;
+    }
+    public int countSoldProduct(){
+        DAO dao = new DAO();
+        this.orderTables = dao.getOrderTableBySellerId(userId);
+        int count = 0;
+        for(OrderTable orderTable:orderTables){
+            count+=orderTable.getOrderItems().size();
+        }
+        return count;
+    }
+    public BigDecimal Revenue(){
+        if("1".equals(this.role)){
+            DAO dao = new DAO();
+            this.orderTables = dao.getFinishedOrderTable();
+            BigDecimal revenue = BigDecimal.valueOf(0);
+            for(OrderTable orderTable:orderTables){
+                for(OrderItem orderItem:orderTable.getOrderItems()){
+                    revenue.add(orderItem.getPrice().multiply(BigDecimal.valueOf(0.1)));
+                }
+            }
+            return revenue;
+        }else{
+            return BigDecimal.valueOf(0);
         }
     }
 

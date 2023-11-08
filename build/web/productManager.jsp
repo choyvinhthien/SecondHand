@@ -24,7 +24,24 @@
         search="";
     }
 %>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+
+<script>
+    $(document).ready(function() {
+        $('#addProduct').on('input', '#priceInput', function() {
+            var price = parseFloat($(this).val());
+            var serviceFeeInput = $('#addProduct #serviceFeeInput');
+            var receiveMoneyInput = $('#addProduct #receiveMoneyInput');
+            if (!isNaN(price)) {
+                var serviceFee = price * 0.1; // Example: 10% of the price
+                var receiveMoney = price - serviceFee;
+                serviceFeeInput.val(serviceFee.toFixed(2));
+                receiveMoneyInput.val(receiveMoney.toFixed(2));
+            }
+        });
+    });
+</script>
     <head>
         <meta charset="utf-8">
         <title>CART FASHION</title>
@@ -63,6 +80,9 @@
             .active-product {
                 color: #00ff00;
             }
+            .blocked-product {
+                color: #0000ff;
+            }
         </style>
     </head>
     
@@ -90,7 +110,7 @@
                             <h2>Manage <b>Products</b></h2>
                         </div>
                         <div class="col-lg-5 col-5 text-left">
-                            <form action="productManagerController" method="Post">
+                            <form action="productManagerController">
                                 <div class="input-group">
                                     <input name="search" id="input-search" type="text" class="form-control" placeholder="Search for Products" value = "<%= search %>">
                                     <button type="submit" name="action" value="search" class="btn btn-outline-primary d-flex align-items-center" style="border: none; background: none;">
@@ -101,9 +121,11 @@
                                 </div>
                             </form>
                         </div>
+                        <c:if test="${sessionScope.user.getRole() == '2'}">
                         <div class="col-lg-3 col-5 text-right">
                             <a href="#addProduct"  class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Product</span></a>
                         </div>
+                        </c:if>
                     </div>
                 </div>
                 <table class="table table-striped table-hover">
@@ -119,7 +141,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <c:forEach items="${listP}" var="o">
+                        <c:forEach items="${listP}" var="o"> <%-- Vòng lặp list sản phẩm ra --%>
                             <tr>
                                 <td class="align-middle">${o.productId}</td>
                                 <td class="align-middle">${o.name}</td>
@@ -137,21 +159,34 @@
                                     <c:if test="${o.status == '1'}">
                                         <td class="align-middle active-product">Active</td>
                                     </c:if>
+                                        <c:if test="${o.status == '2'}">
+                                        <td class="align-middle blocked-product">Blocked</td>
+                                    </c:if>
                                 <td>
                                     <form action="productManagerController" method="POST" id="signup-form" class="btn">
                                         <input type="hidden" name="product_id" id="product_id" value="${o.productId}"/>
                                         <div>
+                                            <%-- Duyệt/vô hiệu hoá sản phẩm của admin --%>
                                         <c:if test="${sessionScope.user.getRole() == '1'}">
                                             <c:if test="${o.status == '0'}">
-                                            <button type="submit" name="action" value="changeStatus" class="btn btn-primary">Activate</button>
+                                                <button type="submit" name="action" value="changeStatus" class="btn btn-primary">Activate</button>
                                             </c:if>
 
                                             <c:if test="${o.status == '1'}">
                                                 <button type="submit" name="action" value="changeStatus" class="btn btn-primary">Inactivate</button>
                                             </c:if>
                                         </c:if>
+                                            <%-- --%>
+                                        <c:if test="${sessionScope.user.getRole() == '2'}">
+                                            <c:if test="${o.status == '1'}">
+                                                <a href="changeProductStatusController?pid=${o.productId}&status=${o.status}&action=block" type="submit" name="action" value="changeStatus" class="btn btn-primary">Block</a>
+                                            </c:if>
+
+                                            <c:if test="${o.status == '2'}">
+                                                <a href="changeProductStatusController?pid=${o.productId}&status=${o.status}&action=unblock" type="submit" name="action" value="changeStatus" class="btn btn-primary">UnBlock</a>
+                                            </c:if>
+                                        </c:if>
                                         <button type="submit" name="action" value="detail" class="btn btn-primary"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></button>
-                                        <button type="submit" name="action" value="delete" class="btn btn-primary" onclick="return confirm('Are you sure to delete product ${o.name}?')"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></button>
                                     </div>
                                     </form>
                                 </td>
@@ -189,7 +224,19 @@
                             </div>
                             <div class="form-group">
                                 <label>Price</label>
-                                <input name="price" type="number" class="form-control" required>
+                                <input id="priceInput" name="price" type="number" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label>Service Fee</label>
+                                        <input id="serviceFeeInput" name="serviceFee" type="number" class="form-control" disabled>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>You Will Get</label>
+                                        <input id="receiveMoneyInput" name="receiveMoney" type="number" class="form-control" disabled>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label>Quality</label>
@@ -202,7 +249,7 @@
                             <div class="form-group">
                                 <label>Category</label>
                                 <select name="category" class="form-select" aria-label="Default select example">
-                                    <c:forEach items="${sessionScope.listCC}" var="o">
+                                    <c:forEach items="${sessionScope.listCC}" var="o"><%-- Vòng lặp list categories ra --%>
                                         <option value="${o.categoryId}">${o.name}</option>
                                     </c:forEach>
                                 </select>

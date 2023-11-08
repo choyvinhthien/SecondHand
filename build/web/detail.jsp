@@ -116,13 +116,85 @@
                     <h3 class="font-weight-semi-bold">${detail.name}</h3>
                     <div class="d-flex mb-3">
                         <div class="text-primary mr-2">
-                            <small class="fas fa-star"></small>
-                            <small class="fas fa-star"></small>
-                            <small class="fas fa-star"></small>
-                            <small class="fas fa-star-half-alt"></small>
-                            <small class="far fa-star"></small>
+                            <c:if test="${detail.averageReviews() == 0}">
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                            </c:if>
+                            <c:if test="${detail.averageReviews() > 0 && detail.averageReviews() <= 0.75}">
+                                <small class="fas fa-star-half-alt"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                            </c:if>
+                            <c:if test="${detail.averageReviews() > 0.75 && detail.averageReviews() <= 1.25}">
+                                <small class="fas fa-star"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                            </c:if>
+                            <c:if test="${detail.averageReviews() > 1.25 && detail.averageReviews() <= 1.75}">
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star-half-alt"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                            </c:if>
+                            <c:if test="${detail.averageReviews() > 1.75 && detail.averageReviews() <= 2.25}">
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                            </c:if>
+                            <c:if test="${detail.averageReviews() > 2.25 && detail.averageReviews() <= 2.75}">
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star-half-alt"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                            </c:if>
+                            <c:if test="${detail.averageReviews() > 2.75 && detail.averageReviews() <= 3.25}">
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="far fa-star"></small>
+                                <small class="far fa-star"></small>
+                            </c:if>
+                            <c:if test="${detail.averageReviews() > 3.25 && detail.averageReviews() <= 3.75}">
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star-half-alt"></small>
+                                <small class="far fa-star"></small>
+                            </c:if>
+                            <c:if test="${detail.averageReviews() > 3.75 && detail.averageReviews() <= 4.25}">
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="far fa-star"></small>
+                            </c:if>
+                            <c:if test="${detail.averageReviews() > 4.25 && detail.averageReviews() <= 4.75}">
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star-half-alt"></small>
+                            </c:if>
+                                <c:if test="${detail.averageReviews() > 4.75 && detail.averageReviews() <= 5}">
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                                <small class="fas fa-star"></small>
+                            </c:if>
                         </div>
-                        <small class="pt-1">(50 Reviews)</small>
+                        <small class="pt-1">(${detail.countReviews()} Reviews)</small>
                     </div>
                     <h3>Price: $${detail.price}</h3>
                     <p class="mb-4">Please scroll down to see more descriptions, and click "Add to cart" to order.</p>
@@ -160,7 +232,7 @@
                     <div class="nav nav-tabs justify-content-center border-secondary mb-4">
                         <a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-1">Description</a>
                         <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-2">Information</a>
-                        <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-3">Reviews (0)</a>
+                        <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-3">Reviews (${detail.countReviews()})</a>
                     </div>
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="tab-pane-1">
@@ -172,14 +244,20 @@
                             <h4 class="mb-3">Additional Information</h4>
                             <p>Was distributed by Group 4 SE17B01 FPTU </p>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-3">
                                      <div class="media mb-4">
-                                        <img src="img/user.jpg" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
+                                        <img src="img/user-2.jpg" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
                                         <div class="media-body">
                                             <h6>${detail.user.getUsername()}</h6>
                                         </div>
-                                        <a href="ShopDetailController?uid=${detail.user.userId}" class="btn btn-primary">Watch Shop</a>
-                                        <a href="ShopDetailController?uid=${detail.user.userId}" class="btn btn-primary">Chat</a>
+                                        <ul>
+                                            <li>
+                                                <a href="ShopDetailController?uid=${detail.user.userId}" >Watch Shop</a>
+                                            </li>
+                                            <li>
+                                                <a href="ShopDetailController?uid=${detail.user.userId}" >Chat</a>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
 
@@ -190,23 +268,9 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <h4 class="mb-4">Review</h4>
+                                    <c:forEach items="${reviewList}" var="item"><%-- Vòng lặp list tất cả reviews của sản phẩm --%>
                                     <div class="media mb-4">
-                                        <img src="img/user.jpg" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
-                                        <div class="media-body">
-                                            <h6>Johny Kiên<small> - <i>01 Jan 2021</i></small></h6>
-                                            <div class="text-primary mb-2">
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star-half-alt"></i>
-                                                <i class="far fa-star"></i>
-                                            </div>
-                                            <p>ÐC EM EII</p>
-                                        </div>
-                                    </div>
-                                    <c:forEach items="${reviewList}" var="item">
-                                    <div class="media mb-4">
-                                        <img src="img/user.jpg" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
+                                        <img src="img/user-2.jpg" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
                                         <div class="media-body">
                                             <h6>${item.user.getUsername()}<small> - <i>${item.date}</i></small></h6>
                                             <div class="text-primary mb-2">
@@ -287,6 +351,7 @@
                                     </c:forEach>
                                 </div>
                                 <div class="col-md-6">
+                                    <%--Feedback--%>
                                     <form action="AddReviews">
                                         <input type="hidden" name="productId" value="${detail.productId}">
                                     <h4 class="mb-4">Leave a review</h4>

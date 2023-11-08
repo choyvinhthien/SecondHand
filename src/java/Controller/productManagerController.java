@@ -46,6 +46,7 @@ public class productManagerController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String indexPage = request.getParameter("index");
+        String search = request.getParameter("search");
         if(indexPage==null){
             indexPage = "1";
         }
@@ -54,18 +55,22 @@ public class productManagerController extends HttpServlet {
         User c = (User) session.getAttribute("user");
         int id = c.getUserId();
         DAO dao = new DAO();
-        int count = dao.getTotal("product");
+        int count = dao.getTotalByUserId("product",c.getUserId());
         int endPage = count/10;
         if(count%10!=0) endPage++;
-        List<Product> list;
+        List<Product> products;
+        Product product = new Product();
         if ("1".equals(c.getRole())) {
-            list = dao.pagingAllProducts(index);
+            products = dao.pagingAllProducts(index);
         }else{
-            list = dao.pagingProducts(index,id);
+            products = dao.pagingProducts(index,id);
+        }
+        if (search!=null) {
+            products = product.findProductsByString(products,search);
         }
         List<Category> listC = dao.getAllCategories();
         session.setAttribute("listCC", listC);
-        session.setAttribute("listP", list);
+        session.setAttribute("listP", products);
         request.setAttribute("endPage", endPage);
         request.setAttribute("tag", index);
         request.getRequestDispatcher("productManager.jsp").forward(request, response);
@@ -102,7 +107,7 @@ public class productManagerController extends HttpServlet {
         String action = request.getParameter("action");
         Product product = new Product();
         switch (action) {
-            case "Add":
+            case "Add": //Add sản phẩm
                 String name = request.getParameter("name");
                 String priceString = request.getParameter("price");
                 BigDecimal price = new BigDecimal(priceString);
@@ -158,25 +163,17 @@ public class productManagerController extends HttpServlet {
             case "detail":
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Detail");
                 break;
-            case "search":
-                String search = request.getParameter("search");
-                List<Product> productList = dao.getAllProducts();
-                productList = product.findProductsByString(productList,search);
-                session.setAttribute("ListP", productList);
-                session.setAttribute("search", search);
-                request.getRequestDispatcher("accountManager.jsp").forward(request, response);
-                break;
             case "changeStatus":
                 int productIdChangeStatus = Integer.parseInt(request.getParameter("product_id"));
-                if("0".equals(dao.getProductWithImagesByProductID(productIdChangeStatus).getStatus())){
-                    if(dao.getProductWithImagesByProductID(productIdChangeStatus).getQuantity()==0){
-                        session.setAttribute("Message", "Cannot Activate Product: "+dao.getProductWithImagesByProductID(productIdChangeStatus).getName()+"(ID: "+
-                                dao.getProductWithImagesByProductID(productIdChangeStatus).getProductId()+") Because Its Quantity = 0");
+                Product product_check = dao.getProductWithImagesByProductID(productIdChangeStatus);
+                if("0".equals(product_check.getStatus())){
+                    if(product_check.getQuantity()==0){
+                        dao.changeStatusForProduct(product_check,"2");
                     }else{
-                        dao.changeStatusForProduct(dao.getProductWithImagesByProductID(productIdChangeStatus),"1");
+                        dao.changeStatusForProduct(product_check,"1");
                     }
                 }else{
-                    dao.changeStatusForProduct(dao.getProductWithImagesByProductID(productIdChangeStatus), "0");
+                    dao.changeStatusForProduct(product_check, "0");
                 }
                 processRequest(request, response);
                 break;

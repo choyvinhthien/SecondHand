@@ -227,6 +227,14 @@
         <servlet-name>DashboardController</servlet-name>
         <servlet-class>Controller.DashboardController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>changeProductStatusController</servlet-name>
+        <servlet-class>Controller.changeProductStatusController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ChatboxController</servlet-name>
+        <servlet-class>Controller.ChatboxController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AddToCartController</servlet-name>
         <url-pattern>/AddToCartController</url-pattern>
@@ -467,6 +475,14 @@
     <servlet-mapping>
         <servlet-name>DashboardController</servlet-name>
         <url-pattern>/DashboardController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>changeProductStatusController</servlet-name>
+        <url-pattern>/changeProductStatusController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ChatboxController</servlet-name>
+        <url-pattern>/ChatboxController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

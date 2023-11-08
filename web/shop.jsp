@@ -115,7 +115,7 @@
                     <div class="row pb-3">
                         <div class="col-12 pb-1">
                             <div class="d-flex align-items-center justify-content-between mb-4">
-                                <form action="productManagerController" method="GET">
+                                <form action="shopController" method="GET">
                                     <div class="input-group">
                                         <input name="search" id="input-search" type="text" class="form-control" placeholder="Search for products">
                                         <button class="btn btn-outline-primary d-flex align-items-center" style="border: none; background: none;">

@@ -29,31 +29,6 @@
         border: 1px solid red;
     }
     </style>
-    <script>
-        function validateForm(){
-            var username = document.getElementsByName("username")[0].value;
-            var password = document.getElementsByName("password")[0].value;
-            var re_password = document.getElementsByName("re_password")[0].value;
-            var first_name = document.getElementsByName("first_name")[0].value;
-            var last_name = document.getElementsByName("last_name")[0].value;
-            var email = document.getElementsByName("email")[0].value;
-            var phone = document.getElementsByName("phone")[0].value;
-            var address = document.getElementsByName("address")[0].value;
-            var role = document.getElementsByName("role")[0].value;
-            if(username === "" || password === "" || re_password === "" || first_name === "" || last_name === "" || email === "" || phone === "" || address === "" || role === ""){
-                document.getElementsByName("username")[0].classList.add("required-field");
-                document.getElementsByName("password")[0].classList.add("required-field");
-                document.getElementsByName("re_password")[0].classList.add("required-field");
-                document.getElementsByName("first_name")[0].classList.add("required-field");
-                document.getElementsByName("last_name")[0].classList.add("required-field");
-                document.getElementsByName("email")[0].classList.add("required-field");
-                document.getElementsByName("phone")[0].classList.add("required-field");
-                document.getElementsByName("address")[0].classList.add("required-field");
-                document.getElementsByName("role")[0].classList.add("required-field");
-                
-            }
-        }
-    </script>
     <%
         String username = (String)session.getAttribute("username");
         String password = (String)session.getAttribute("password");
@@ -101,7 +76,7 @@
             
             <div class="container">
                 <div class="signup-content">
-                    <form action="RegisterControl" method="POST" id="signup-form" class="signup-form" onsubmit="return validateForm()">
+                    <form action="RegisterControl" method="POST" id="signup-form" class="signup-form">
 
                         <h2 class="form-title">Create account</h2>
                         

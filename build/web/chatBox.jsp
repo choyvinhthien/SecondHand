@@ -57,6 +57,7 @@
                         <div id="chat-area">
                             <c:forEach items="${chatList}" var="mess">
                                 <input type="hidden" name="roomId" value="${mess.chatroom.getRoomId()}">
+                                <small>${mess.timestamp}</small>
                                 <div class="message-container">
                                     <span class="message-sender">${mess.senderName}:</span>
                                     <div class="message-content">${mess.content}</div>

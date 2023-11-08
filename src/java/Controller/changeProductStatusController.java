@@ -6,12 +6,8 @@ package Controller;
 
 import DAO.DAO;
 import dto.Product;
-import dto.Review;
-import dto.User;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Timestamp;
-import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +18,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author Admin
  */
-public class RatingController extends HttpServlet {
+public class changeProductStatusController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,7 +32,27 @@ public class RatingController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+        HttpSession session = request.getSession();
+        DAO dao = new DAO();
+        String action = request.getParameter("action");
+        int pid = Integer.parseInt(request.getParameter("pid"));
+        Product product = dao.getProductWithImagesByProductID(pid);
+        switch (action) {
+            case "block":
+                dao.changeStatusForProduct(product,"2");
+                break;
+            case "unblock":
+                if(product.getQuantity()==0){
+                        session.setAttribute("Message", "Cannot Activate Product: "+product.getName()+"(ID: "+
+                                            product.getProductId()+") Because Its Quantity = 0");
+                    }else{
+                        dao.changeStatusForProduct(product,"1");
+                    }
+                break;
+            default:
+                throw new AssertionError();
+        }
+        response.sendRedirect("productManagerController");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -65,22 +81,7 @@ public class RatingController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        DAO dao = new DAO();
-        int rating = Integer.parseInt(request.getParameter("rating"));
-        String comment = request.getParameter("comment");
-        Timestamp ratingDate = new Timestamp(System.currentTimeMillis());
-        User user = (User) session.getAttribute("user");
-        Product product = dao.getProductWithImagesByProductID(Integer.parseInt(request.getParameter("productId")));
-        String submit = request.getParameter("submit");
-        switch (submit) {
-            case "Leave Your Review":
-                Review review = new Review(rating, comment, ratingDate, user, product);
-                dao.addReview(review);
-                break;
-            default:
-                throw new AssertionError();
-        }
+        processRequest(request, response);
     }
 
     /**

@@ -34,8 +34,6 @@
                 </div> 
                 <div class="panel-body">
                     <form action="changePasswordController" class="form-horizontal" role="form">
-                        <input type="hidden" name="username" value="${sessionScope.user.getUsername()}">
-                        <input type="hidden" name="password" value="${sessionScope.user.getPassword()}">
                         <div class="form-group">
                             <label for="name" class="col-sm-3 control-label"> Old Password</label>
                             <div class="col-sm-6">
